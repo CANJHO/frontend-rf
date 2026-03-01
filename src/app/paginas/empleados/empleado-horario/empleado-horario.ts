@@ -237,15 +237,21 @@ export class EmpleadoHorarioComponent implements OnInit {
       }
 
       if (t1Inicio && t1Fin && t1Inicio >= t1Fin) {
-        errores.push(`En ${d.nombreDia}, la hora de inicio del Turno 1 debe ser menor que la hora de fin.`);
+        errores.push(
+          `En ${d.nombreDia}, la hora de inicio del Turno 1 debe ser menor que la hora de fin.`,
+        );
       }
 
       if (t2Inicio && t2Fin && t2Inicio >= t2Fin) {
-        errores.push(`En ${d.nombreDia}, la hora de inicio del Turno 2 debe ser menor que la hora de fin.`);
+        errores.push(
+          `En ${d.nombreDia}, la hora de inicio del Turno 2 debe ser menor que la hora de fin.`,
+        );
       }
 
       if (!t1Inicio && !t1Fin && !t2Inicio && !t2Fin) {
-        errores.push(`Configura al menos un tramo (Turno 1 o Turno 2) en ${d.nombreDia} o márcalo como descanso.`);
+        errores.push(
+          `Configura al menos un tramo (Turno 1 o Turno 2) en ${d.nombreDia} o márcalo como descanso.`,
+        );
       }
 
       if (d.tolerancia_min < 0 || d.tolerancia_min > 60) {
@@ -377,20 +383,18 @@ export class EmpleadoHorarioComponent implements OnInit {
 
     this.servicioHorarios
       .dia(this.empleadoId, this.exFecha)
-      .pipe(
-        finalize(() => {
-          this.exCargandoDia = false;
-        }),
-      )
+      .pipe(finalize(() => (this.exCargandoDia = false)))
       .subscribe({
         next: (resp) => {
-          this.exActual = resp?.excepcion || null;
+          const ex = resp?.excepcion || null;
+
+          // ✅ CLAVE: asignar NUEVA referencia (para que Angular repinte)
+          this.exActual = ex ? { ...ex } : null;
 
           if (this.exActual) {
             this.exTipo = this.exActual.tipo || 'Horario especial';
             this.exEsLaborable = !!this.exActual.es_laborable;
 
-            // ✅ normalizar para inputs time
             this.exHoraInicio = this.toHHmm(this.exActual.hora_inicio);
             this.exHoraFin = this.toHHmm(this.exActual.hora_fin);
 
@@ -403,6 +407,7 @@ export class EmpleadoHorarioComponent implements OnInit {
             this.exObservacion = '';
           }
 
+          // ✅ Forzar UI refresh
           this.cdr.detectChanges();
         },
         error: (err) => {
@@ -411,7 +416,6 @@ export class EmpleadoHorarioComponent implements OnInit {
         },
       });
   }
-
   guardarExcepcion() {
     if (this.exGuardando) return;
 
@@ -465,7 +469,6 @@ export class EmpleadoHorarioComponent implements OnInit {
       fecha: this.exFecha,
       tipo: this.exTipo,
       es_laborable: this.exEsLaborable,
-      // ✅ manda HH:mm limpio
       hora_inicio: this.exEsLaborable ? this.cleanTimeForApi(this.exHoraInicio) : null,
       hora_fin: this.exEsLaborable ? this.cleanTimeForApi(this.exHoraFin) : null,
       observacion: this.exObservacion?.trim() || null,
@@ -475,11 +478,7 @@ export class EmpleadoHorarioComponent implements OnInit {
 
     this.servicioHorarios
       .addExcepcion(this.empleadoId, payload)
-      .pipe(
-        finalize(() => {
-          this.exGuardando = false;
-        }),
-      )
+      .pipe(finalize(() => (this.exGuardando = false)))
       .subscribe({
         next: () => {
           Swal.fire({
@@ -489,7 +488,15 @@ export class EmpleadoHorarioComponent implements OnInit {
             background: '#111',
             color: '#f5f5f5',
           });
+
+          // ✅ CLAVE 1: limpia estado para forzar cambio de *ngIf
+          this.exActual = null;
+
+          // ✅ CLAVE 2: vuelve a cargar del backend (debe devolver la excepción)
           this.cargarExcepcionDelDia();
+
+          // ✅ CLAVE 3: repaint inmediato
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Error guardando excepción', err);
@@ -503,7 +510,6 @@ export class EmpleadoHorarioComponent implements OnInit {
         },
       });
   }
-
   eliminarExcepcionActual() {
     if (!this.exActual) return;
 
