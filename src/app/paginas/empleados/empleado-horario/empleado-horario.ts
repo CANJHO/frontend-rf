@@ -39,18 +39,9 @@ export class EmpleadoHorarioComponent implements OnInit {
   cargandoHistorial = false;
   historial: any[] = [];
 
-  // ==========================
-  // ✅ FIX: FECHA LOCAL (NO UTC)
-  // ==========================
-  private hoyLocalYYYYMMDD(): string {
-    const d = new Date();
-    // Truco estándar: mover minutos para que toISOString represente la fecha local
-    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-    return d.toISOString().slice(0, 10);
-  }
-
-  // Fecha de referencia de la vigencia (YYYY-MM-DD) ✅ LOCAL
-  fechaReferencia = this.hoyLocalYYYYMMDD();
+  // ✅ FECHAS (LOCAL) - NO UTC
+  fechaReferencia: string = this.hoyLocalISO(); // YYYY-MM-DD
+  exFecha: string = this.hoyLocalISO();         // YYYY-MM-DD
 
   // Semana en formato “calendario”
   semana: DiaHorarioUI[] = [];
@@ -68,8 +59,6 @@ export class EmpleadoHorarioComponent implements OnInit {
   // ==========================
   // EXCEPCIONES (UI)
   // ==========================
-  // ✅ LOCAL
-  exFecha: string = this.hoyLocalYYYYMMDD();
   exTipo: string = 'Horario especial';
   exEsLaborable: boolean = true;
   exHoraInicio: string | null = null;
@@ -100,13 +89,27 @@ export class EmpleadoHorarioComponent implements OnInit {
     this.inicializarSemana();
     this.cargarResumenEmpleado();
 
-    // Cargar horario vigente y excepción con la fecha inicial
+    // ✅ Cargar con fecha LOCAL
     this.cargarHorarioVigente();
     this.cargarExcepcionDelDia();
   }
 
   // ==========================
-  // HELPERS (CLAVE DEL FIX)
+  // ✅ FECHA LOCAL (FIX REAL)
+  // ==========================
+  /**
+   * Devuelve YYYY-MM-DD usando hora local del navegador (no UTC).
+   * Evita el bug de "tengo que ver mañana/pasado".
+   */
+  private hoyLocalISO(): string {
+    const d = new Date();
+    const tzOffsetMin = d.getTimezoneOffset(); // min a restar para llegar a "local ISO"
+    const local = new Date(d.getTime() - tzOffsetMin * 60_000);
+    return local.toISOString().slice(0, 10);
+  }
+
+  // ==========================
+  // HELPERS (TIME)
   // ==========================
   /** Convierte "08:00:00" -> "08:00" para que el <input type="time"> lo muestre */
   private toHHmm(v: any): string | null {
@@ -114,11 +117,9 @@ export class EmpleadoHorarioComponent implements OnInit {
     const s = String(v).trim();
     if (!s) return null;
 
-    // Si viene como "HH:mm:ss" o "HH:mm"
     if (/^\d{2}:\d{2}(:\d{2})?$/.test(s)) {
       return s.slice(0, 5);
     }
-
     return null;
   }
 
@@ -143,18 +144,14 @@ export class EmpleadoHorarioComponent implements OnInit {
 
   private cargarResumenEmpleado() {
     this.servicioEmpleados.obtenerFicha(this.empleadoId).subscribe({
-      next: (emp) => {
-        this.empleadoResumen = emp;
-      },
-      error: (err) => {
-        console.warn('No se pudo cargar resumen de empleado en módulo horario', err);
-      },
+      next: (emp) => (this.empleadoResumen = emp),
+      error: (err) =>
+        console.warn('No se pudo cargar resumen de empleado en módulo horario', err),
     });
   }
 
   // Se ejecuta cuando cambias la fecha (input date)
   onCambioFechaReferencia() {
-    // fechaReferencia ya es YYYY-MM-DD por ser input type="date"
     this.cargarHorarioVigente();
   }
 
@@ -164,15 +161,10 @@ export class EmpleadoHorarioComponent implements OnInit {
 
     this.servicioHorarios
       .vigente(this.empleadoId, this.fechaReferencia)
-      .pipe(
-        finalize(() => {
-          this.cargando = false;
-        }),
-      )
+      .pipe(finalize(() => (this.cargando = false)))
       .subscribe({
         next: (rows) => {
           this.mapearSemanaDesdeBackend(rows || []);
-          // Fuerza repaint cuando los inputs "time" no refrescan bien
           this.cdr.detectChanges();
         },
         error: (err) => {
@@ -204,7 +196,6 @@ export class EmpleadoHorarioComponent implements OnInit {
       return {
         ...item,
         es_descanso: !!r.es_descanso,
-        // ✅ CLAVE: normalizar para que el input type="time" muestre
         hora_inicio: this.toHHmm(r.hora_inicio),
         hora_fin: this.toHHmm(r.hora_fin),
         hora_inicio_2: this.toHHmm(r.hora_inicio_2),
@@ -248,21 +239,15 @@ export class EmpleadoHorarioComponent implements OnInit {
       }
 
       if (t1Inicio && t1Fin && t1Inicio >= t1Fin) {
-        errores.push(
-          `En ${d.nombreDia}, la hora de inicio del Turno 1 debe ser menor que la hora de fin.`,
-        );
+        errores.push(`En ${d.nombreDia}, la hora de inicio del Turno 1 debe ser menor que la hora de fin.`);
       }
 
       if (t2Inicio && t2Fin && t2Inicio >= t2Fin) {
-        errores.push(
-          `En ${d.nombreDia}, la hora de inicio del Turno 2 debe ser menor que la hora de fin.`,
-        );
+        errores.push(`En ${d.nombreDia}, la hora de inicio del Turno 2 debe ser menor que la hora de fin.`);
       }
 
       if (!t1Inicio && !t1Fin && !t2Inicio && !t2Fin) {
-        errores.push(
-          `Configura al menos un tramo (Turno 1 o Turno 2) en ${d.nombreDia} o márcalo como descanso.`,
-        );
+        errores.push(`Configura al menos un tramo (Turno 1 o Turno 2) en ${d.nombreDia} o márcalo como descanso.`);
       }
 
       if (d.tolerancia_min < 0 || d.tolerancia_min > 60) {
@@ -292,10 +277,9 @@ export class EmpleadoHorarioComponent implements OnInit {
     }
 
     const payload = {
-      fecha_inicio: this.fechaReferencia, // ✅ ahora viene local
+      fecha_inicio: this.fechaReferencia,
       items: this.semana.map((d) => ({
         dia: d.dia,
-        // ✅ CLAVE: manda HH:mm (no HH:mm:ss)
         hora_inicio: d.es_descanso ? null : this.cleanTimeForApi(d.hora_inicio),
         hora_fin: d.es_descanso ? null : this.cleanTimeForApi(d.hora_fin),
         hora_inicio_2: d.es_descanso ? null : this.cleanTimeForApi(d.hora_inicio_2),
@@ -320,7 +304,6 @@ export class EmpleadoHorarioComponent implements OnInit {
             color: '#f5f5f5',
           });
 
-          // ✅ CLAVE: recargar y forzar repaint
           this.cargarHorarioVigente();
         },
         error: (err) => {
@@ -355,9 +338,7 @@ export class EmpleadoHorarioComponent implements OnInit {
       .historial(this.empleadoId)
       .pipe(finalize(() => (this.cargandoHistorial = false)))
       .subscribe({
-        next: (rows) => {
-          this.historial = rows || [];
-        },
+        next: (rows) => (this.historial = rows || []),
         error: (err) => {
           console.error('Error cargando historial de horarios', err);
           this.mostrandoHistorial = false;
@@ -390,17 +371,13 @@ export class EmpleadoHorarioComponent implements OnInit {
       .subscribe({
         next: (resp) => {
           const ex = resp?.excepcion || null;
-
-          // ✅ CLAVE: asignar NUEVA referencia (para que Angular repinte)
           this.exActual = ex ? { ...ex } : null;
 
           if (this.exActual) {
             this.exTipo = this.exActual.tipo || 'Horario especial';
             this.exEsLaborable = !!this.exActual.es_laborable;
-
             this.exHoraInicio = this.toHHmm(this.exActual.hora_inicio);
             this.exHoraFin = this.toHHmm(this.exActual.hora_fin);
-
             this.exObservacion = this.exActual.observacion || '';
           } else {
             this.exTipo = 'Horario especial';
@@ -410,7 +387,6 @@ export class EmpleadoHorarioComponent implements OnInit {
             this.exObservacion = '';
           }
 
-          // ✅ Forzar UI refresh
           this.cdr.detectChanges();
         },
         error: (err) => {
@@ -470,7 +446,7 @@ export class EmpleadoHorarioComponent implements OnInit {
     }
 
     const payload = {
-      fecha: this.exFecha, // ✅ ahora viene local
+      fecha: this.exFecha,
       tipo: this.exTipo,
       es_laborable: this.exEsLaborable,
       hora_inicio: this.exEsLaborable ? this.cleanTimeForApi(this.exHoraInicio) : null,
@@ -493,13 +469,8 @@ export class EmpleadoHorarioComponent implements OnInit {
             color: '#f5f5f5',
           });
 
-          // ✅ CLAVE 1: limpia estado para forzar cambio de *ngIf
           this.exActual = null;
-
-          // ✅ CLAVE 2: vuelve a cargar del backend (debe devolver la excepción)
           this.cargarExcepcionDelDia();
-
-          // ✅ CLAVE 3: repaint inmediato
           this.cdr.detectChanges();
         },
         error: (err) => {
