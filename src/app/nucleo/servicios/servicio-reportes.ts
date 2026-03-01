@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { API_BASE_URL } from '../../config/api.config';
 
 export type PeriodoReporte =
   | 'semana'
@@ -11,7 +12,7 @@ export type PeriodoReporte =
 
 @Injectable({ providedIn: 'root' })
 export class ServicioReportes {
-  private base = 'http://localhost:3000/reportes';
+  private base = `${API_BASE_URL}/reportes`;
 
   buildResumenUrl(params: {
     period?: PeriodoReporte;

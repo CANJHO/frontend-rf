@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { API_BASE_URL } from '../../../config/api.config';
 
 @Component({
   selector: 'app-reporte-usuarios',
@@ -13,8 +14,8 @@ export class ReporteUsuariosComponent {
   descargando = false;
   error: string | null = null;
 
-  private urlExcel = 'http://localhost:3000/reportes/usuarios-excel';
-  private urlPdf = 'http://localhost:3000/reportes/usuarios-pdf';
+  private urlExcel = `${API_BASE_URL}/reportes/usuarios-excel`;
+  private urlPdf = `${API_BASE_URL}/reportes/usuarios-pdf`;
 
   constructor(private http: HttpClient) {}
 

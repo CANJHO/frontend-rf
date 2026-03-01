@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-
+import { API_BASE_URL } from '../../config/api.config';
 @Injectable({
   providedIn: 'root',
 })
 export class ServicioAutenticacion {
 
-  private readonly apiUrl = 'http://localhost:3000/auth';
+  private readonly apiUrl = `${API_BASE_URL}/auth`;
   private readonly tokenKey = 'token';
   private readonly usuarioKey = 'usuario';
 

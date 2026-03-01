@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../../config/api.config';
 
 export type TipoMarcaje = 'IN' | 'OUT';
 export type MetodoMarcaje =
@@ -51,7 +52,7 @@ export interface KioskoMarcajeRespuesta extends RespuestaMarcaje {}
   providedIn: 'root',
 })
 export class ServicioAsistencias {
-  private readonly urlBase = 'http://localhost:3000/asistencias';
+  private readonly urlBase = `${API_BASE_URL}/asistencias`;
 
   constructor(private http: HttpClient) {}
 

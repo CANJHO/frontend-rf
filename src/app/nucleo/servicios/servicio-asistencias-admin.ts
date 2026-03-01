@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { EventoAsistencia, MetodoMarcaje } from './servicio-asistencias';
+import { API_BASE_URL } from '../../config/api.config';
 
 export type EstadoValidacion = 'aprobado' | 'pendiente' | 'rechazado';
 
@@ -69,7 +70,7 @@ export interface ResumenDiaResponse {
 
 @Injectable({ providedIn: 'root' })
 export class ServicioAsistenciasAdmin {
-  private readonly urlBaseAdmin = 'http://localhost:3000/asistencias-admin';
+  private readonly urlBaseAdmin = `${API_BASE_URL}/asistencias-admin`;
 
   constructor(private http: HttpClient) {}
 

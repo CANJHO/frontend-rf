@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { API_BASE_URL } from '../../config/api.config';
 export interface RespuestaListaEmpleados {
   datos: any[];
   total: number;
@@ -25,7 +25,7 @@ export interface CumpleanosProximoRow {
   providedIn: 'root',
 })
 export class ServicioEmpleados {
-  private readonly urlBase = 'http://localhost:3000/empleados';
+  private readonly urlBase = `${API_BASE_URL}/empleados`;
 
   constructor(private http: HttpClient) {}
 

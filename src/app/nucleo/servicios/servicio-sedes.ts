@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../../config/api.config';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,7 @@ import { Observable } from 'rxjs';
 export class ServicioSedes {
 
   // Ajusta la URL si tu backend usa otra base
-  private urlApi = 'http://localhost:3000/sedes';
+  private urlApi = `${API_BASE_URL}/sedes`;
 
   constructor(private http: HttpClient) {}
 
