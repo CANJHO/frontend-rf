@@ -1,0 +1,181 @@
+<div class="contenedor-usuarios">
+  <!-- Cabecera -->
+  <div class="cabecera">
+    <h2 class="titulo">Listado de Usuarios</h2>
+
+    <!-- 🔍 Buscador -->
+    <div class="buscador">
+      <input
+        type="text"
+        [(ngModel)]="terminoBusqueda"
+        (keyup.enter)="ejecutarBusqueda()"
+        placeholder="Buscar por nombre o documento..."
+        class="buscador__input"
+      />
+
+      <button
+        type="button"
+        class="boton-accion buscador__boton"
+        (click)="ejecutarBusqueda()">
+        Buscar
+      </button>
+    </div>
+
+    <button
+      type="button"
+      class="boton-accion"
+      (click)="abrirNuevo()">
+      Nuevo usuario
+    </button>
+  </div>
+
+  <br>
+
+  <!-- Estado: cargando -->
+  <div *ngIf="cargandoLista" class="cargando">
+    Cargando usuarios...
+  </div>
+
+  <!-- Estado: error -->
+  <div *ngIf="!cargandoLista && errorCarga" class="mensaje-error">
+    Ocurrió un error al cargar los usuarios.
+    <button type="button" (click)="cargarUsuarios()">Reintentar</button>
+  </div>
+
+  <!-- Estado: datos OK -->
+  <ng-container *ngIf="!cargandoLista && !errorCarga">
+
+    <!-- Con registros -->
+    <table *ngIf="usuarios.length > 0; else sinUsuarios" class="tabla-usuarios">
+      <thead>
+        <tr>
+          <th>Nombre completo</th>
+          <th>Documento</th>
+          <th>Tipo</th>
+          <th>Correo personal</th>
+          <th>Teléfono</th>
+          <th>Rol</th>
+          <th>Sede</th>
+          <th>Área</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <!-- 👇 ahora usamos la lista paginada -->
+        <tr *ngFor="let u of usuariosPaginados">
+          <td>{{ u.nombre }} {{ u.apellido_paterno }} {{ u.apellido_materno }}</td>
+          <td>{{ u.numero_documento }}</td>
+          <td>{{ u.tipo_documento }}</td>
+          <td>{{ u.email_personal || '-' }}</td>
+          <td>{{ u.telefono_celular || '-' }}</td>
+          <td>{{ u.rol }}</td>
+          <td>{{ u.sede_nombre || '-' }}</td>
+          <td>{{ u.area_nombre || '-' }}</td>
+
+          <td>
+            <span
+              class="estado"
+              [class.activo]="u.activo===true"
+              [class.inactivo]="u.activo === false">
+              {{ u.activo === true ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+
+          <td class="acciones">
+            <button
+              type="button"
+              class="boton-accion boton-editar"
+              (click)="abrirEditar(u)">
+              ✏️
+            </button>
+              <br>
+          <button type="button" 
+              class="boton-accion boton-editar" 
+              (click)="cambiarEstadoUsuario(u)"> 
+              ⛔ 
+          </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 🔢 Paginación -->
+<div class="paginacion" *ngIf="usuarios.length > 0">
+
+  <!-- IZQUIERDA -->
+  <div class="paginacion__left">
+    <div class="paginacion__info">
+      Mostrando registros del
+      {{ (paginaActual - 1) * tamanoPagina + 1 }}
+      al
+      {{
+        (paginaActual * tamanoPagina) > totalRegistros
+          ? totalRegistros
+          : (paginaActual * tamanoPagina)
+      }}
+      de un total de {{ totalRegistros }} registros
+    </div>
+
+    <label>
+      Mostrar
+      <select
+        [ngModel]="tamanoPagina"
+        (ngModelChange)="cambiarTamanoPagina($event)">
+        <option *ngFor="let op of opcionesTamanoPagina" [ngValue]="op">
+          {{ op }}
+        </option>
+      </select>
+      registros
+    </label>
+  </div>
+
+  <!-- DERECHA -->
+  <div class="paginacion__right">
+    <button
+      type="button"
+      class="boton-estado"
+      (click)="paginaAnterior()"
+      [disabled]="paginaActual === 1">
+      «
+    </button>
+
+    <span class="paginacion__pagina">
+      Página {{ paginaActual }} de {{ totalPaginas }}
+    </span>
+
+    <button
+      type="button"
+      class="boton-estado"
+      (click)="paginaSiguiente()"
+      [disabled]="paginaActual === totalPaginas">
+      »
+    </button>
+  </div>
+
+</div>
+
+
+    <!-- Sin registros -->
+    <ng-template #sinUsuarios>
+      <div class="sin-registros">
+        No hay usuarios registrados.
+      </div>
+    </ng-template>
+
+  </ng-container>
+</div>
+
+<!-- MODAL: se superpone encima, no debajo de la tabla -->
+<app-modal-usuario
+  *ngIf="mostrandoModal"
+  [modo]="modoModal"
+  [usuarioEditar]="usuarioEditando"
+  (cerrar)="onCancelarModal()"
+  (guardoCambios)="onGuardado()">
+</app-modal-usuario>
+
+
+
+

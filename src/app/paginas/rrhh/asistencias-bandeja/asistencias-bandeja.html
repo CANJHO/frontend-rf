@@ -1,0 +1,148 @@
+<div class="contenedor-usuarios">
+  <div class="cabecera">
+    <h2 class="titulo">Asistencias (RRHH)</h2>
+
+    <div class="buscador">
+      <input
+        type="text"
+        [(ngModel)]="terminoBusqueda"
+        (keyup.enter)="ejecutarBusqueda()"
+        placeholder="Buscar por nombre o documento..."
+        class="buscador__input"
+      />
+
+      <button
+        type="button"
+        class="boton-accion buscador__boton"
+        (click)="ejecutarBusqueda()"
+      >
+        Buscar
+      </button>
+    </div>
+
+    <div class="filtros-fecha">
+      <label>Fecha:</label>
+      <input type="date" [(ngModel)]="fecha" />
+    </div>
+  </div>
+
+  <br />
+
+  <div *ngIf="cargando" class="cargando">Cargando empleados...</div>
+
+  <div *ngIf="!cargando && errorCarga" class="mensaje-error">
+    Ocurrió un error al cargar los empleados.
+    <button type="button" (click)="cargarEmpleados(1)">Reintentar</button>
+  </div>
+
+  <ng-container *ngIf="!cargando && !errorCarga">
+    <table *ngIf="empleados.length > 0; else sinRegistros" class="tabla-usuarios">
+      <thead>
+        <tr>
+          <th>Nombre completo</th>
+          <th>Documento</th>
+          <th>Sede</th>
+          <th>Área</th>
+
+          <!-- ✅ OJO: clase SOLO para ancho/estilo de cabecera, NO flex -->
+          <th class="col-pendiente">Pendiente</th>
+
+          <th>Acción</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let e of empleados">
+          <td>{{ e.nombre }} {{ e.apellido_paterno }} {{ e.apellido_materno }}</td>
+          <td>{{ e.numero_documento }}</td>
+          <td>{{ e.sede || '-' }}</td>
+          <td>{{ e.area || '-' }}</td>
+
+          <td class="col-pendiente">
+            <!-- ✅ Contenedor interno (AQUÍ va el flex) -->
+            <div class="pendiente-cell">
+              <ng-container *ngIf="tienePendiente(e); else okPendiente">
+                <span class="badge-pendiente">
+                  ⚠️ Pendiente: {{ fechaPendiente(e) }}
+                </span>
+
+                <button type="button" class="btn-pendiente" (click)="irAPendiente(e)">
+                  Ir a pendiente
+                </button>
+              </ng-container>
+
+              <ng-template #okPendiente>
+                <span class="badge-ok">OK</span>
+              </ng-template>
+            </div>
+          </td>
+
+          <td class="acciones">
+            <button
+              type="button"
+              class="btn-accion btn-editar"
+              (click)="verAsistenciasDelDia(e)"
+            >
+              Ver / Corregir día
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="paginacion" *ngIf="empleados.length > 0">
+      <div class="paginacion__left">
+        <div class="paginacion__info">
+          Mostrando registros del
+          {{ (paginaActual - 1) * tamanoPagina + 1 }}
+          al
+          {{
+            (paginaActual * tamanoPagina) > totalRegistros
+              ? totalRegistros
+              : (paginaActual * tamanoPagina)
+          }}
+          de un total de {{ totalRegistros }} registros
+        </div>
+
+        <label>
+          Mostrar
+          <select
+            [ngModel]="tamanoPagina"
+            (ngModelChange)="cambiarTamanoPagina($event)"
+          >
+            <option *ngFor="let op of opcionesTamanoPagina" [ngValue]="op">
+              {{ op }}
+            </option>
+          </select>
+          registros
+        </label>
+      </div>
+
+      <div class="paginacion__right">
+        <button
+          type="button"
+          class="boton-estado"
+          (click)="paginaAnterior()"
+          [disabled]="paginaActual === 1"
+        >
+          «
+        </button>
+
+        <span class="paginacion__pagina">Página {{ paginaActual }} de {{ totalPaginas }}</span>
+
+        <button
+          type="button"
+          class="boton-estado"
+          (click)="paginaSiguiente()"
+          [disabled]="paginaActual === totalPaginas"
+        >
+          »
+        </button>
+      </div>
+    </div>
+
+    <ng-template #sinRegistros>
+      <div class="sin-registros">No hay empleados que coincidan con la búsqueda.</div>
+    </ng-template>
+  </ng-container>
+</div>

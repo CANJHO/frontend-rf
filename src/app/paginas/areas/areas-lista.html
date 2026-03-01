@@ -1,0 +1,122 @@
+<div class="contenedor-usuarios">
+  <!-- Cabecera -->
+  <div class="cabecera">
+    <h2 class="titulo">Áreas</h2>
+
+    <div class="acciones-cabecera">
+
+      <button
+        type="button"
+        class="boton-accion"
+        (click)="abrirNueva()">
+        Nueva área
+      </button>
+    </div>
+  </div>
+
+
+  <!-- Estado: cargando -->
+  <div *ngIf="cargando" class="cargando">
+    Cargando áreas...
+  </div>
+
+
+  <!-- Estado: datos OK -->
+  <ng-container *ngIf="!cargando && !errorCarga">
+
+    <table *ngIf="areas.length > 0; else sinAreas" class="tabla-usuarios">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Estado</th>
+          <th class="col-acciones">Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let a of areas">
+          <td>{{ a.nombre }}</td>
+
+          <td>
+            <span
+              class="estado"
+              [class.activo]="a.activo"
+              [class.inactivo]="!a.activo">
+              {{ a.activo ? 'Activa' : 'Inactiva' }}
+            </span>
+          </td>
+
+          <td class="col-acciones">
+            <button
+              type="button"
+              class="boton-editar"
+              (click)="abrirEditar(a)">
+              ✏️
+            </button>
+
+            <button
+              type="button"
+              class="boton-accion boton-eliminar"
+              *ngIf="a.activo"
+              (click)="desactivar(a)">
+              ⛔
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #sinAreas>
+      <div class="sin-registros">
+        No hay áreas registradas.
+      </div>
+    </ng-template>
+
+  </ng-container>
+</div>
+
+<!-- MODAL: igual estilo que Usuarios -->
+<div
+  class="modal-overlay"
+  *ngIf="mostrandoModal"
+  (click)="cerrarModal()">
+</div>
+
+<div
+  class="modal-contenedor"
+  *ngIf="mostrandoModal">
+  <h2 class="titulo-modal">
+    {{ areaEditando ? 'Editar área' : 'Nueva área' }}
+  </h2>
+
+  <form [formGroup]="formulario" (ngSubmit)="guardarArea()">
+
+    <div class="campo">
+      <label>Nombre del área</label>
+      <input type="text" formControlName="nombre" />
+    </div>
+
+    <div class="campo campo-check">
+      <label>
+        <input type="checkbox" formControlName="activo" />
+        Activa
+      </label>
+    </div>
+
+    <div class="acciones">
+      <button
+        type="button"
+        class="btn-cerrar"
+        (click)="cerrarModal()">
+        Cancelar
+      </button>
+
+      <button
+        type="submit"
+        class="btn-guardar">
+        {{ areaEditando ? 'Actualizar' : 'Guardar' }}
+      </button>
+    </div>
+
+  </form>
+</div>

@@ -1,0 +1,389 @@
+/* =======================================
+   CONTENEDOR GENERAL
+   ======================================= */
+.contenedor-usuarios {
+  padding: 20px;
+  color: #f1f1f1;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.cargando {
+  color: #d4af37;
+  font-size: 16px;
+}
+
+/* =======================================
+   FILTRO FECHA (NUEVO)
+   ======================================= */
+.filtros-fecha {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  label {
+    color: #f5f5f5;
+    font-weight: 600;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  input[type='date'] {
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    background: #111;
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    color: #f5f5f5;
+
+    &:focus {
+      border-color: #d4af37;
+      outline: none;
+    }
+  }
+}
+
+/* =======================================
+   TABLA DE USUARIOS
+   ======================================= */
+.tabla-usuarios {
+  width: 100%;
+  border-collapse: collapse;
+  background: #111;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 10px;
+  overflow: hidden;
+
+  th,
+  td {
+    vertical-align: middle;
+  }
+
+  th {
+    background: #1a1a1a;
+    padding: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    color: #d4af37;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    text-align: center;
+  }
+
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #222;
+    font-size: 14px;
+  }
+
+  tr:hover td {
+    background: rgba(212, 175, 55, 0.08);
+  }
+}
+
+/* Nombre: se acorta con "..." */
+.tabla-usuarios td:first-child {
+  white-space: nowrap;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =======================================
+   ESTADO
+   ======================================= */
+.estado {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+
+  &.activo {
+    background: #3fae3f;
+  }
+
+  &.inactivo {
+    background: rgba(255, 80, 80, 0.2);
+    color: #ff6b6b;
+  }
+}
+
+/* =======================================
+   BOTONES
+   ======================================= */
+.boton-accion {
+  background: #d4af37;
+  color: #111;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s ease, transform 0.1s ease;
+
+  &:hover {
+    background: #c49c2f;
+    transform: scale(1.03);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+/* =======================================
+   ACCIONES
+   ======================================= */
+td.acciones {
+  text-align: center;
+}
+
+.acciones-contenedor {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+td.acciones button {
+  background: linear-gradient(135deg, #d4af37, #b1891f);
+  border: none;
+  color: #111;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+  transition: 0.15s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.9);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* =======================================
+   MENSAJES
+   ======================================= */
+.mensaje-error,
+.sin-registros {
+  margin-top: 1rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 10px;
+  background: rgba(17, 17, 17, 0.9);
+}
+
+/* =======================================
+   CABECERA + BUSCADOR
+   ======================================= */
+.cabecera {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.cabecera .titulo {
+  margin: 0;
+}
+
+.buscador {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 0 380px;
+}
+
+.buscador__input {
+  width: 100%;
+  padding: 0.45rem 0.7rem;
+  border-radius: 6px;
+  background: #111;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: #f5f5f5;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  &:focus {
+    border-color: #d4af37;
+  }
+}
+
+.buscador__boton {
+  background: linear-gradient(135deg, #d4af37, #b1891f);
+  border: none;
+  padding: 0.45rem 1.1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #050505;
+  font-weight: 600;
+  font-size: 0.9rem;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.9);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+/* ================================
+   PAGINACIÓN
+   ================================ */
+.paginacion {
+  margin-top: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.paginacion__info,
+.paginacion__controles label {
+  color: #f5f5f5;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.paginacion__left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.paginacion select {
+  background: #111;
+  color: #f5f5f5;
+  border: 1px solid #d4af37;
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+  outline: none;
+
+  &:focus {
+    border-color: #f0cd5f;
+  }
+}
+
+.paginacion__right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.paginacion__pagina {
+  color: #d4af37;
+  font-weight: 600;
+  min-width: 140px;
+  text-align: center;
+}
+
+.boton-estado {
+  background: linear-gradient(135deg, #d4af37, #b1891f);
+  border: none;
+  color: #111;
+  font-weight: bold;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(212,175,55,0.5);
+  transition: 0.15s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 12px rgba(212,175,55,0.9);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* =======================================
+   COLUMNA PENDIENTE (FIX REAL)
+   ======================================= */
+
+/* ✅ Aquí NO se usa display:flex porque esto es TH/TD (table-cell) */
+th.col-pendiente,
+td.col-pendiente {
+  text-align: center;
+  min-width: 220px;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+/* ✅ Contenedor interno: AQUÍ sí va flex */
+.pendiente-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 40px; /* estabiliza altura para OK/Pendiente */
+}
+
+/* Badge pendiente */
+.badge-pendiente {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: rgba(212, 175, 55, 0.10);
+  color: #d4af37;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* Badge OK */
+.badge-ok {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: rgba(63, 174, 63, 0.18);
+  border: 1px solid rgba(63, 174, 63, 0.35);
+  color: #5fe05f;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* Botón "Ir a pendiente" */
+.btn-pendiente {
+  width: 190px;
+  background: #d4af37;
+  color: #111;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.15s ease;
+
+  &:hover {
+    filter: brightness(0.95);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}

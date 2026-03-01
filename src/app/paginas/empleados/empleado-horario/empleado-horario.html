@@ -1,0 +1,222 @@
+<div class="horario-wrapper" *ngIf="!cargando && !errorCarga">
+
+  <!-- CABECERA -->
+  <div class="horario-header">
+    <button class="btn-volver" (click)="volverAEmpleado()">← Volver</button>
+
+    <div class="titulo-grupo">
+      <h2 class="titulo">
+        Horario del empleado
+      </h2>
+
+      <div class="subtitulo" *ngIf="empleadoResumen">
+        {{ empleadoResumen.nombre }} {{ empleadoResumen.apellido_paterno }} {{ empleadoResumen.apellido_materno }}
+        — <span>{{ empleadoResumen.area }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FECHA DE VIGENCIA -->
+  <div class="vigencia-box">
+    <label>Vigente desde:</label>
+    <input
+      type="date"
+      [(ngModel)]="fechaReferencia"
+      (change)="cargarHorarioVigente()"
+    />
+  </div>
+
+  <!-- GRID SEMANAL -->
+  <div class="semana-grid">
+    <div class="dia-card" *ngFor="let d of semana">
+      <div class="dia-titulo">
+        {{ d.nombreDia }}
+      </div>
+
+      <label class="toggle-linea">
+        <input type="checkbox" [(ngModel)]="d.es_descanso" (change)="toggleDescanso(d)" />
+        <span>Descanso</span>
+      </label>
+
+      <div class="turnos" *ngIf="!d.es_descanso">
+        <!-- TURNO 1 -->
+        <div class="turno-bloque">
+          <div class="turno-titulo">Turno 1</div>
+          <div class="turno-campos">
+            <label>
+              Inicio:
+              <input type="time" [(ngModel)]="d.hora_inicio" />
+            </label>
+            <label>
+              Fin:
+              <input type="time" [(ngModel)]="d.hora_fin" />
+            </label>
+          </div>
+        </div>
+
+        <!-- TURNO 2 -->
+        <div class="turno-bloque">
+          <div class="turno-titulo">Turno 2</div>
+          <div class="turno-campos">
+            <label>
+              Inicio:
+              <input type="time" [(ngModel)]="d.hora_inicio_2" />
+            </label>
+            <label>
+              Fin:
+              <input type="time" [(ngModel)]="d.hora_fin_2" />
+            </label>
+          </div>
+        </div>
+
+        <!-- TOLERANCIA -->
+        <div class="tolerancia-bloque">
+          <label>
+            Tolerancia (min):
+            <input
+              type="number"
+              min="0"
+              max="60"
+              [(ngModel)]="d.tolerancia_min"
+            />
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTÓN GUARDAR HORARIO -->
+  <div class="guardar-box">
+    <button class="btn-guardar" (click)="guardarSemana()" [disabled]="guardando">
+      {{ guardando ? 'Guardando...' : 'Guardar horario' }}
+    </button>
+  </div>
+
+  <!-- HISTORIAL (si ya lo tenías lo dejas aquí, no lo repito para no alargar) -->
+
+<!-- ===================== -->
+<!-- EXCEPCIONES POR FECHA -->
+<!-- ===================== -->
+<div class="excepciones-wrapper">
+  <div class="excepciones-header">
+    <h3>Excepciones de horario por fecha</h3>
+    <p>Útil para cambios puntuales (feriados, permisos, turnos especiales).</p>
+  </div>
+
+  <div class="excepciones-body">
+    <!-- LADO IZQUIERDO: FORMULARIO -->
+    <div class="ex-form">
+      <div class="campo">
+        <label>Fecha de la excepción</label>
+        <input
+          type="date"
+          [(ngModel)]="exFecha"
+          (change)="onCambioFechaExcepcion()"
+        />
+      </div>
+
+      <div class="campo">
+        <label>Tipo de excepción</label>
+        <select [(ngModel)]="exTipo">
+          <option>Horario especial</option>
+          <option>Descanso especial</option>
+          <option>Laborable en día de descanso</option>
+        </select>
+      </div>
+
+      <label class="check-linea">
+        <input type="checkbox" [(ngModel)]="exEsLaborable" />
+        <span>Día laborable (con registro de asistencia)</span>
+      </label>
+
+      <div class="subtitulo">Horario de la excepción</div>
+
+      <div class="fila-horas" *ngIf="exEsLaborable">
+        <div class="campo">
+          <label>Inicio:</label>
+          <input type="time" [(ngModel)]="exHoraInicio" />
+        </div>
+        <div class="campo">
+          <label>Fin:</label>
+          <input type="time" [(ngModel)]="exHoraFin" />
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Observación</label>
+        <textarea
+          rows="3"
+          [(ngModel)]="exObservacion"
+          placeholder="Motivo de la excepción (feriado, permiso, reemplazo, etc.)"
+        ></textarea>
+      </div>
+
+      <div class="acciones-ex">
+        <button
+          class="btn-guardar-excepcion"
+          type="button"
+          (click)="guardarExcepcion()"
+          [disabled]="exGuardando"
+        >
+          {{ exGuardando ? 'Guardando...' : 'Guardar excepción' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- LADO DERECHO: ESTADO DE LA FECHA -->
+    <div class="ex-estado">
+      <ng-container *ngIf="exCargandoDia">
+        <div class="ex-estado__cargando">Cargando información...</div>
+      </ng-container>
+
+      <ng-container *ngIf="!exCargandoDia">
+        <div *ngIf="!exActual" class="ex-estado__sin">
+          <h4>Sin excepción registrada</h4>
+          <p>Para la fecha seleccionada aplica el horario semanal normal.</p>
+        </div>
+
+        <div *ngIf="exActual" class="ex-estado__con">
+          <h4>Excepción registrada</h4>
+          <div class="ex-chip">{{ exActual.tipo }}</div>
+
+          <p>
+            <strong>Fecha:</strong> {{ exActual.fecha | date:'dd/MM/yyyy' }}
+          </p>
+          <p>
+            <strong>Día laborable:</strong>
+            {{ exActual.es_laborable ? 'Sí' : 'No' }}
+          </p>
+          <p *ngIf="exActual.hora_inicio && exActual.hora_fin">
+            <strong>Horario:</strong>
+            {{ exActual.hora_inicio }} - {{ exActual.hora_fin }}
+          </p>
+          <p *ngIf="exActual.observacion">
+            <strong>Observación:</strong> {{ exActual.observacion }}
+          </p>
+
+          <button
+            type="button"
+            class="btn-eliminar-excepcion"
+            (click)="eliminarExcepcionActual()"
+            [disabled]="exGuardando"
+          >
+            Eliminar excepción
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+
+</div>
+
+<!-- LOADING -->
+<div *ngIf="cargando" class="estado-cargando">
+  Cargando horario...
+</div>
+
+<!-- ERROR -->
+<div *ngIf="!cargando && errorCarga" class="estado-error">
+  Error cargando horario.
+</div>

@@ -1,0 +1,30 @@
+<div class="reporte-usuarios">
+  <h2 class="titulo">Reporte de usuarios</h2>
+  <p class="descripcion">
+    Descargar lista de usuarios.
+  </p>
+
+  <div class="acciones">
+    <button
+      type="button"
+      class="boton-accion"
+      (click)="descargarExcel()"
+      [disabled]="descargando"
+    >
+      {{ descargando ? 'Generando archivo...' : 'Descargar Excel' }}
+    </button>
+
+    <button
+      type="button"
+      class="boton-accion"
+      (click)="descargarUsuariosPdf()"
+      [disabled]="descargando"
+    >
+      Descargar PDF
+    </button>
+  </div>
+
+  <div *ngIf="error" class="mensaje-error">
+    {{ error }}
+  </div>
+</div>

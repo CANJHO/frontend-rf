@@ -1,0 +1,143 @@
+<div class="contenedor-usuarios">
+  <div class="cabecera">
+    <div class="cabecera__left">
+      <h2 class="titulo">Corrección por día</h2>
+
+      <div class="subtitulo">
+        Empleado:
+        <strong>{{ empleado?.nombre_completo || usuarioId }}</strong>
+        <span *ngIf="empleado?.numero_documento">
+          ({{ empleado?.numero_documento }})
+        </span>
+        — Fecha: <strong>{{ fecha }}</strong>
+      </div>
+    </div>
+
+    <div class="acciones-top">
+      <button type="button" class="boton-accion" (click)="volver()">← Volver</button>
+
+      <button
+        type="button"
+        class="boton-accion boton-accion--sec"
+        (click)="cargar()"
+        [disabled]="cargando"
+        title="Vuelve a consultar al backend sin recargar la página"
+      >
+        {{ cargando ? 'Refrescando...' : 'Refrescar' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Crear marcaje manual -->
+  <div class="panel-crear">
+    <div class="panel-crear__titulo">Crear marcaje manual (RRHH)</div>
+
+    <div class="panel-crear__fila">
+      <div class="campo">
+        <label>Hora</label>
+        <input type="time" [(ngModel)]="formHora" />
+      </div>
+
+      <div class="campo">
+        <label>Evento</label>
+        <select [(ngModel)]="formEvento">
+          <option *ngFor="let ev of eventos" [ngValue]="ev.value">
+            {{ ev.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="campo campo--grow">
+        <label>Motivo (obligatorio)</label>
+        <input
+          type="text"
+          [(ngModel)]="formMotivo"
+          placeholder="Ej: Olvidó marcar, autorización de RRHH..."
+        />
+      </div>
+
+      <button
+        type="button"
+        class="boton-accion"
+        (click)="crearManual()"
+        [disabled]="creando"
+      >
+        {{ creando ? 'Creando...' : 'Crear' }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="cargando" class="cargando">Cargando timeline...</div>
+
+  <div *ngIf="!cargando && errorCarga" class="mensaje-error">
+    Ocurrió un error al cargar la información.
+    <button type="button" (click)="cargar()">Reintentar</button>
+  </div>
+
+  <div *ngIf="!cargando && !errorCarga">
+    <div *ngIf="timeline.length === 0" class="sin-registros">
+      No hay marcajes para este día.
+    </div>
+
+    <table *ngIf="timeline.length > 0" class="tabla-usuarios">
+      <thead>
+        <tr>
+          <th>Hora</th>
+          <th>Evento</th>
+          <th>Tipo</th>
+          <th>Método</th>
+          <th>Estado</th>
+          <th>Min. tarde</th>
+          <th class="th-acciones">Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let a of timeline">
+          <td>{{ a.fecha_hora | date:'HH:mm:ss' }}</td>
+          <td>{{ a.evento }}</td>
+          <td>{{ labelTipo(a.tipo) }}</td>
+          <td>{{ a.metodo }}</td>
+          <td>
+            <span class="badge" [ngClass]="claseEstado(a.estado_validacion)">
+              {{ labelEstado(a.estado_validacion) }}
+            </span>
+          </td>
+          <td>{{ a.minutos_tarde ?? '-' }}</td>
+
+          <td class="acciones">
+            <div class="acciones-contenedor">
+              <button
+                type="button"
+                class="btn-mini btn-mini--ok"
+                (click)="aprobar(a)"
+                [disabled]="deshabilitarAprobar(a)"
+              >
+                Aprobar
+              </button>
+
+              <button
+                type="button"
+                class="btn-mini btn-mini--warn"
+                (click)="rechazar(a)"
+                [disabled]="deshabilitarRechazar(a)"
+              >
+                Rechazar
+              </button>
+
+              <button
+                type="button"
+                class="btn-mini btn-mini--bad"
+                (click)="anular(a)"
+                [disabled]="deshabilitarAnular(a)"
+                title="Anular (deja el marcaje en rechazado, no borra)"
+              >
+                Anular
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,140 @@
+<div class="contenedor-usuarios">
+
+  <!-- CABECERA -->
+  <div class="cabecera">
+    <h2 class="titulo">Sedes</h2>
+
+    <button
+      type="button"
+      class="boton-accion"
+      (click)="abrirNueva()">
+      Nueva sede
+    </button>
+  </div>
+
+  <!-- ESTADO: cargando -->
+  <div *ngIf="cargando" class="cargando">
+    Cargando sedes...
+  </div>
+
+  <!-- ESTADO: error -->
+  <div *ngIf="!cargando && errorCarga" class="mensaje-error">
+    Ocurrió un error al cargar las sedes.
+    <button type="button" class="boton-accion" (click)="cargarSedes()">
+      Reintentar
+    </button>
+  </div>
+
+  <!-- ESTADO: datos correctos -->
+  <ng-container *ngIf="!cargando && !errorCarga">
+
+    <!-- TABLA -->
+    <table *ngIf="sedes.length > 0; else sinSedes" class="tabla-usuarios">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Estado</th>
+          <th class="col-acciones">Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let s of sedes">
+          <td>{{ s.nombre }}</td>
+
+          <td>
+            <span
+              class="estado"
+              [class.activo]="s.activo"
+              [class.inactivo]="!s.activo">
+              {{ s.activo ? 'Activa' : 'Inactiva' }}
+            </span>
+          </td>
+
+          <td class="col-acciones">
+
+            <!-- EDITAR -->
+            <button
+              type="button"
+              class="boton-accion boton-editar"
+              (click)="abrirEditar(s)"
+              title="Editar sede">
+              ✏️
+            </button>
+
+            <!-- DESACTIVAR (solo si está activa) -->
+            <button
+              *ngIf="s.activo"
+              type="button"
+              class="boton-accion boton-eliminar"
+              (click)="desactivar(s)"
+              title="Desactivar sede">
+              ⛔
+            </button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- SIN REGISTROS -->
+    <ng-template #sinSedes>
+      <div class="sin-registros">
+        No hay sedes registradas.
+      </div>
+    </ng-template>
+
+  </ng-container>
+</div>
+
+<!-- MODAL -->
+<div
+  class="modal-overlay"
+  *ngIf="mostrandoModal"
+  (click)="cerrarModal()">
+</div>
+
+<div
+  class="modal-contenedor"
+  *ngIf="mostrandoModal">
+
+  <h2 class="titulo-modal">
+    {{ sedeEditando ? 'Editar sede' : 'Nueva sede' }}
+  </h2>
+
+  <form [formGroup]="formulario" (ngSubmit)="guardarSede()">
+
+    <div class="campo">
+      
+      <input type="text" formControlName="nombre" />
+
+      <div class="mensaje-error"
+        *ngIf="formulario.get('nombre')?.invalid && formulario.get('nombre')?.touched">
+        El nombre es obligatorio.
+      </div>
+    </div>
+
+    <div class="campo campo-check">
+      <label>
+        <input type="checkbox" formControlName="activo" />
+        Activa
+      </label>
+    </div>
+
+    <div class="acciones">
+      <button
+        type="button"
+        class="btn-cerrar"
+        (click)="cerrarModal()">
+        Cancelar
+      </button>
+
+      <button
+        type="submit"
+        class="btn-guardar">
+        Guardar
+      </button>
+    </div>
+
+  </form>
+</div>

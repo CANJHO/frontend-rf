@@ -1,0 +1,126 @@
+<div class="inicio">
+  <div class="cabecera">
+    <div>
+      <h2 class="titulo">Inicio</h2>
+      <p class="subtitulo">
+        Resumen de asistencia (todas las sedes) — Selecciona una fecha para ver el estado general.
+      </p>
+    </div>
+
+    <div class="filtros">
+      <label>Fecha:</label>
+      <input type="date" [(ngModel)]="fecha" />
+      <button type="button" class="btn" (click)="cargar()" [disabled]="cargando">
+        {{ cargando ? 'Cargando...' : 'Aplicar' }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="errorCarga" class="alerta-error">
+    Ocurrió un error al cargar el resumen.
+    <button type="button" class="btn-link" (click)="cargar()">Reintentar</button>
+  </div>
+
+  <div *ngIf="!errorCarga && !cargando && !resumen" class="tarjeta-bienvenida">
+    <h2>Bienvenido(a) al Panel</h2>
+    <p>
+      Seleccione una opción del menú lateral para administrar usuarios, horarios,
+      asistencias o reportes.
+    </p>
+  </div>
+
+  <ng-container *ngIf="resumen">
+    <!-- KPIs -->
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi__label">Total empleados</div>
+        <div class="kpi__value">{{ resumen.total_empleados }}</div>
+      </div>
+
+      <div class="kpi kpi--ok">
+        <div class="kpi__label">Marcaron ingreso</div>
+        <div class="kpi__value">{{ resumen.marcaron_ingreso }}</div>
+      </div>
+
+      <div class="kpi kpi--warn">
+        <div class="kpi__label">No marcaron ingreso</div>
+        <div class="kpi__value">{{ resumen.no_marcaron_ingreso }}</div>
+      </div>
+
+      <div class="kpi kpi--warn2">
+        <div class="kpi__label">Tardanzas</div>
+        <div class="kpi__value">{{ resumen.tardanzas }}</div>
+      </div>
+
+      <div class="kpi kpi--bad">
+        <div class="kpi__label">Pendientes</div>
+        <div class="kpi__value">{{ resumen.pendientes }}</div>
+      </div>
+    </div>
+
+    <!-- Tablas -->
+    <div class="grid">
+      <div class="card">
+        <div class="card__title">Ingresos del día</div>
+
+        <div class="tabla-wrap" *ngIf="resumen.ingresos.length; else sinIngresos">
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>Empleado</th>
+                <th>Documento</th>
+                <th>Hora ingreso</th>
+                <th>Tardanza</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let r of resumen.ingresos">
+                <td class="nombre">{{ r.nombre_completo }}</td>
+                <td>{{ r.numero_documento || '-' }}</td>
+                <td>{{ horaDe(r.fecha_hora_in) }}</td>
+                <td>
+                  <span class="pill" [class.pill--tarde]="(r.minutos_tarde || 0) > 0">
+                    {{ tardanzaLabel(r.minutos_tarde) }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ng-template #sinIngresos>
+          <div class="vacio">Nadie registró ingreso en esta fecha.</div>
+        </ng-template>
+      </div>
+
+      <div class="card">
+        <div class="card__title">Top tardanzas</div>
+
+        <div class="tabla-wrap" *ngIf="resumen.top_tardanzas.length; else sinTardanzas">
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>Empleado</th>
+                <th>Hora ingreso</th>
+                <th>Min. tarde</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let r of resumen.top_tardanzas">
+                <td class="nombre">{{ r.nombre_completo }}</td>
+                <td>{{ horaDe(r.fecha_hora_in) }}</td>
+                <td>
+                  <span class="pill pill--tarde">{{ tardanzaLabel(r.minutos_tarde) }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ng-template #sinTardanzas>
+          <div class="vacio">No hay tardanzas en esta fecha.</div>
+        </ng-template>
+      </div>
+    </div>
+  </ng-container>
+</div>

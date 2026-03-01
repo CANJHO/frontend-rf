@@ -1,0 +1,8 @@
+<!-- Se muestra solo cuando cargando$ emite true -->
+<div class="loader-overlay" *ngIf="cargando$ | async">
+  <div class="loader-contenido">
+    <div class="loader-spinner"></div>
+    <div class="loader-texto">Cargando...</div>
+  </div>
+</div>
+

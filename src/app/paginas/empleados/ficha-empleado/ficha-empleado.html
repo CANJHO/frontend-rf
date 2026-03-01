@@ -1,0 +1,287 @@
+<div class="ficha-wrapper" *ngIf="!cargando && !errorCarga && empleado">
+
+  <!-- CABECERA: Volver + Título + Imprimir FICHA -->
+  <div class="ficha-header">
+    <button type="button" class="btn-volver" (click)="volverAListado()">
+      ← Volver
+    </button>
+
+    <h2 class="titulo">Ficha del empleado</h2>
+
+    <div class="acciones-ficha">
+      <button
+        type="button"
+        class="btn-imprimir-carnet"
+        (click)="imprimirFichaPdf()"
+        [disabled]="imprimiendoFicha"
+      >
+        {{ imprimiendoFicha ? 'Generando ficha...' : 'Imprimir ficha (A4)' }}
+      </button>
+      
+      <button
+        type="button"
+        class="btn-imprimir-carnet"
+        (click)="descargarFotocheck()"
+        [disabled]="imprimiendoFotocheck"
+      >
+        {{ imprimiendoFotocheck ? 'Generando fotocheck...' : 'Imprimir fotocheck' }}
+      </button>
+
+      <button
+        type="button"
+        class="btn-imprimir-carnet"
+        [routerLink]="['/panel/empleados', empleado.id, 'horario']"
+        [disabled]="!empleado?.id">
+        Asignar horario
+      </button>
+
+    </div>
+  </div>
+
+
+  <div class="ficha-grid">
+
+    <!-- =======================
+         IDENTIFICACIÓN
+         ======================= -->
+    <div class="card card-identificacion">
+
+      <div class="card-title">Identificación</div>
+
+      <!-- FOTO ACTUAL + BOTÓN FLOTANTE -->
+      <div class="foto-box">
+        <ng-container *ngIf="empleado?.foto_perfil_url; else sinFoto">
+          <img
+            [src]="empleado.foto_perfil_url"
+            alt="Foto del empleado"
+          />
+        </ng-container>
+
+        <ng-template #sinFoto>
+          <div class="foto-placeholder">Sin foto</div>
+        </ng-template>
+
+        <!-- Botón flotante con icono de cámara -->
+        <label class="btn-foto-flotante">
+          <span class="btn-foto-flotante__icono">📷</span>
+          <span class="btn-foto-flotante__texto">Cambiar foto</span>
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onArchivoSeleccionado($event)"
+            hidden
+          />
+        </label>
+      </div>
+
+      <!-- Código de barras -->
+      <div class="codigo-item">
+        <span class="label">Código de barras:</span>
+        <div class="codigo-img">
+          <img
+            *ngIf="empleado.barcode_url; else sinBarcode"
+            [src]="empleado.barcode_url"
+            alt="Código de barras"
+          />
+          <ng-template #sinBarcode>
+            <div class="codigo-placeholder">Sin código</div>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- Código QR -->
+      <div class="codigo-item">
+        <span class="label">Código QR:</span>
+        <div class="codigo-img codigo-img-qr">
+          <img
+            *ngIf="empleado.qr_url; else sinQr"
+            [src]="empleado.qr_url"
+            alt="Código QR"
+          />
+          <ng-template #sinQr>
+            <div class="codigo-placeholder">Sin QR</div>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- OVERLAY PREVIEW FOTO -->
+      <div class="preview-overlay" *ngIf="previewFoto">
+        <div class="preview-overlay__backdrop" (click)="cancelarPreview()"></div>
+
+        <div class="preview-overlay__contenido">
+          <div class="preview-titulo">Vista previa</div>
+
+          <div class="preview-box">
+            <img [src]="previewFoto" alt="Vista previa de foto" />
+          </div>
+
+          <div class="preview-botones">
+            <button
+              type="button"
+              class="btn-guardar-foto"
+              (click)="subirFoto()"
+              [disabled]="subiendoFoto"
+            >
+              {{ subiendoFoto ? 'Guardando...' : 'Guardar foto' }}
+            </button>
+
+            <button
+              type="button"
+              class="btn-cancelar-foto"
+              (click)="cancelarPreview()"
+              [disabled]="subiendoFoto"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- =======================
+         DATOS PERSONALES
+         ======================= -->
+    <div class="card">
+
+      <div class="card-title">Datos personales</div>
+
+      <div class="campo">
+        <span class="label">Nombre completo:</span>
+        <span class="valor">
+          {{ empleado.nombre }} {{ empleado.apellido_paterno }} {{ empleado.apellido_materno }}
+        </span>
+      </div>
+
+      <div class="campo">
+        <span class="label">Documento:</span>
+        <span class="valor">
+          {{ empleado.tipo_documento }} - {{ empleado.numero_documento }}
+        </span>
+      </div>
+
+      <div class="campo">
+        <span class="label">Teléfono:</span>
+        <span class="valor">{{ empleado.telefono_celular || '-' }}</span>
+      </div>
+
+      <div class="campo">
+        <span class="label">Correo personal:</span>
+        <span class="valor">{{ empleado.email_personal || '-' }}</span>
+      </div>
+
+      <div class="campo">
+        <span class="label">Correo institucional:</span>
+        <span class="valor">{{ empleado.email_institucional || '-' }}</span>
+      </div>
+
+    </div>
+
+    <!-- =======================
+         DATOS LABORALES
+         ======================= -->
+    <div class="card">
+
+      <div class="card-title">Datos laborales</div>
+
+      <div class="campo">
+        <span class="label">Rol:</span>
+        <span class="valor">{{ empleado.rol }}</span>
+      </div>
+
+      <div class="campo">
+        <span class="label">Sede:</span>
+        <span class="valor">{{ empleado.sede }}</span>
+      </div>
+
+      <div class="campo">
+        <span class="label">Área:</span>
+        <span class="valor">{{ empleado.area }}</span>
+      </div>
+
+      <div class="campo">
+        <span class="label">Estado:</span>
+        <span
+          class="estado"
+          [class.activo]="empleado.activo"
+          [class.inactivo]="!empleado.activo"
+        >
+          {{ empleado.activo ? 'Activo' : 'Inactivo' }}
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+  <br>
+      <!-- =======================
+         HORARIO VIGENTE
+         ======================= -->
+    <div class="card">
+
+      <div class="card-title">Horario laboral vigente</div>
+
+      <!-- Cargando horarios -->
+      <div *ngIf="cargandoHorarios" class="estado-cargando">
+        Cargando horario...
+      </div>
+
+      <!-- Error horarios -->
+      <div *ngIf="!cargandoHorarios && errorHorarios" class="estado-error">
+        No se pudo cargar el horario.
+      </div>
+
+      <!-- Horario listo -->
+      <div *ngIf="!cargandoHorarios && !errorHorarios">
+
+        <!-- Si no hay horario -->
+        <div *ngIf="horariosUI.length === 0" class="sin-datos">
+          No tiene horario asignado.
+        </div>
+
+        <!-- Lista de días -->
+        <div class="horario-lista" *ngIf="horariosUI.length > 0">
+
+          <div class="horario-item" *ngFor="let h of horariosUI">
+
+            <div class="horario-dia">{{ h.nombre }}</div>
+
+            <div class="horario-turnos">
+
+              <!-- Etiquetas especiales -->
+              <span *ngIf="h.etiqueta" class="horario-etiqueta">
+                {{ h.etiqueta }}
+              </span>
+
+              <!-- Turno 1 -->
+              <span *ngIf="!h.etiqueta && h.turno1" class="horario-turno">
+                {{ h.turno1 }}
+              </span>
+
+              <!-- Turno 2 -->
+              <span *ngIf="!h.etiqueta && h.turno2" class="horario-turno">
+                {{ h.turno2 }}
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+</div>
+
+<!-- CARGANDO -->
+<div *ngIf="cargando" class="estado-cargando">
+  Cargando ficha del empleado...
+</div>
+
+<!-- ERROR -->
+<div *ngIf="!cargando && errorCarga" class="estado-error">
+  No se pudo cargar la ficha.
+</div>

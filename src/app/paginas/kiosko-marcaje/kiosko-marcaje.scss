@@ -1,0 +1,485 @@
+.kiosko {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #050608;
+  color: #f7d86b;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ───────── HEADER ───────── */
+
+.kiosko__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 32px;
+  border-bottom: 1px solid rgba(247, 216, 107, 0.12);
+  background: radial-gradient(circle at top left, #1a1207 0, #050608 55%);
+}
+
+.header__logo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  img {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+.header__titulos {
+  display: flex;
+  flex-direction: column;
+}
+
+.header__app {
+  font-size: 20px;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+}
+
+.header__sub {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.header__fecha-hora {
+  text-align: right;
+}
+
+.header__fecha {
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.header__hora {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* ───────── BODY ───────── */
+
+.kiosko__body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr);
+  gap: 24px;
+  padding: 24px 32px 32px;
+}
+
+/* ───────── PANEL IZQUIERDO ───────── */
+
+.kiosko__panel-form {
+  display: flex;
+}
+
+.panel-form__contenedor {
+  background: radial-gradient(circle at top left, #17120b 0, #050608 60%);
+  border-radius: 18px;
+  border: 1px solid rgba(247, 216, 107, 0.14);
+  padding: 24px 26px;
+  width: 100%;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
+}
+
+.panel-form__titulo {
+  font-size: 24px;
+  margin: 0 0 6px 0;
+}
+
+.panel-form__texto {
+  font-size: 14px;
+  opacity: 0.8;
+  margin: 0 0 18px 0;
+}
+
+.panel-form__label {
+  font-size: 13px;
+  display: block;
+  margin: 0 0 6px 0;
+}
+
+.panel-form__label-help {
+  font-size: 11px;
+  opacity: 0.7;
+  margin-left: 6px;
+}
+
+.panel-form__input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.panel-form__input {
+  flex: 1;
+  background: #050608;
+  border-radius: 999px;
+  border: 1px solid rgba(247, 216, 107, 0.4);
+  padding: 12px 18px;
+  color: #f7d86b;
+  outline: none;
+  font-size: 16px;
+}
+
+.panel-form__input:focus {
+  border-color: #ffc94b;
+  box-shadow: 0 0 0 1px rgba(255, 201, 75, 0.3);
+}
+
+.panel-form__botones {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+/* ───────── BOTONES ───────── */
+
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 26px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.06s ease, box-shadow 0.06s ease, opacity 0.06s ease;
+}
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn:not(:disabled):active {
+  transform: translateY(1px) scale(0.99);
+  box-shadow: none;
+}
+
+.btn--verde {
+  background: #0f8b3d;
+  color: #fdfdfd;
+  box-shadow: 0 10px 24px rgba(15, 139, 61, 0.5);
+  flex: 1;
+}
+
+.btn--naranja {
+  background: #c06119;
+  color: #fdfdfd;
+  box-shadow: 0 10px 24px rgba(192, 97, 25, 0.5);
+  flex: 1;
+}
+
+.btn--gris {
+  background: #222326;
+  color: #f7d86b;
+  padding-inline: 18px;
+}
+
+/* ───────── INSTRUCCIONES (debajo del input) ───────── */
+
+.panel-form__instrucciones {
+  margin: 10px 0 16px;
+  font-size: 13px;
+  border-radius: 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(247, 216, 107, 0.12);
+  background: rgba(5, 6, 8, 0.45);
+
+  h2 {
+    font-size: 16px;
+    margin: 0 0 8px 0;
+  }
+
+  ol {
+    padding-left: 18px;
+    margin: 0 0 8px 0;
+  }
+
+  li {
+    margin-bottom: 4px;
+    opacity: 0.9;
+  }
+
+  .panel-info__nota {
+    font-size: 12px;
+    opacity: 0.85;
+    margin: 0;
+  }
+}
+
+/* ───────── ESTADO DEL MARCAJE ───────── */
+
+.panel-form__estado {
+  min-height: 44px;
+  margin-top: 10px;
+}
+
+.estado {
+  font-size: 13px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+}
+
+.estado--procesando {
+  border-color: rgba(247, 216, 107, 0.6);
+  background: rgba(247, 216, 107, 0.06);
+}
+
+.estado--ok {
+  border-color: rgba(41, 157, 73, 0.8);
+  background: rgba(41, 157, 73, 0.12);
+}
+
+.estado--pendiente {
+  border-color: rgba(247, 216, 107, 0.8);
+  background: rgba(247, 216, 107, 0.08);
+}
+
+.estado--error {
+  border-color: rgba(220, 69, 69, 0.9);
+  background: rgba(220, 69, 69, 0.13);
+  color: #ffd4d4;
+}
+
+.estado__titulo {
+  font-weight: 800;
+}
+
+.estado__detalle {
+  margin-top: 4px;
+  opacity: 0.9;
+}
+
+/* ───────── PANEL DERECHO ───────── */
+
+.kiosko__panel-info {
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at top right, #1a1207 0, #050608 60%);
+  border-radius: 18px;
+  border: 1px solid rgba(247, 216, 107, 0.14);
+  padding: 20px 22px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
+}
+
+.panel-info__reloj {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reloj-giant {
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+/* ───────── TARJETA EMPLEADO GIGANTE ───────── */
+
+.panel-info__empleado {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empleado-card {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(5, 6, 8, 0.9);
+  border: 1px solid rgba(247, 216, 107, 0.18);
+}
+
+.empleado-card--giant {
+  width: 100%;
+  max-width: 560px;
+  padding: 22px;
+  gap: 20px;
+  border-radius: 18px;
+}
+
+.empleado-card__foto {
+  width: 80px;
+  height: 80px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #15171c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.empleado-card__foto--giant {
+  width: 200px;
+  height: 250px;
+  border-radius: 18px;
+}
+
+.empleado-card__foto--placeholder {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+}
+
+.empleado-card__datos {
+  flex: 1;
+}
+
+.empleado-card__datos--giant {
+  text-align: left;
+}
+
+.empleado-card__nombre {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.empleado-card__nombre--giant {
+  font-size: 26px;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.empleado-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tag {
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(247, 216, 107, 0.5);
+  background: rgba(247, 216, 107, 0.06);
+}
+
+.empleado-card__hora {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+/* ───────── RESPONSIVE ───────── */
+
+@media (max-width: 1024px) {
+  .kiosko__body {
+    grid-template-columns: 1fr;
+  }
+
+  .reloj-giant {
+    font-size: 48px;
+  }
+
+  .empleado-card__foto--giant {
+    width: 170px;
+    height: 220px;
+  }
+
+  .empleado-card__nombre--giant {
+    font-size: 22px;
+  }
+}
+/* =========================
+   OVERRIDE: tipografías + foto grande (sin estirar)
+   PÉGALO AL FINAL DEL SCSS
+========================= */
+
+/* Header */
+.header__app { font-size: 24px; }
+.header__sub { font-size: 15px; }
+.header__fecha { font-size: 15px; }
+.header__hora { font-size: 30px; }
+
+/* Título y texto del panel izquierdo */
+.panel-form__titulo { font-size: 34px; }
+.panel-form__texto { font-size: 16px; line-height: 1.45; }
+.panel-form__label { font-size: 15px; }
+.panel-form__label-help { font-size: 13px; }
+
+/* Input */
+.panel-form__input {
+  font-size: 18px;
+  padding: 12px 20px;
+}
+
+/* Botones */
+.btn {
+  font-size: 14px;
+  padding: 14px 28px;
+}
+
+/* Instrucciones (panel izquierdo) */
+.panel-form__instrucciones {
+  font-size: 15px;
+  line-height: 1.45;
+}
+.panel-form__instrucciones h2 {
+  font-size: 18px;
+}
+.panel-form__instrucciones li {
+  margin-bottom: 6px;
+}
+
+/* Estado (ENTRADA / SALIDA / tardanza) */
+.estado { font-size: 15px; padding: 10px 14px; }
+.estado__titulo { font-size: 16px; }
+.estado__detalle { font-size: 14px; }
+
+/* Tarjeta gigante (panel derecho) */
+.empleado-card--giant {
+  max-width: 720px;   /* más ancho */
+  padding: 28px;
+  gap: 24px;
+}
+
+.empleado-card__nombre--giant {
+  font-size: 28px;    /* nombre grande */
+  line-height: 1.15;
+}
+
+/* Tags más grandes */
+.tag {
+  font-size: 13px;
+  padding: 5px 10px;
+}
+
+/* Hora del marcaje (texto abajo) */
+.empleado-card__hora { font-size: 14px; }
+
+/* FOTO: más grande, sin forzar, nítida */
+.empleado-card__foto--giant {
+  width: 240px;
+  height: 300px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #111318;
+  flex-shrink: 0;
+}
+
+.empleado-card__foto--giant img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;       /* NO se estira */
+  object-position: center; /* centra la cara */
+  display: block;
+}

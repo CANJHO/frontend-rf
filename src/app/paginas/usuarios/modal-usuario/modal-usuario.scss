@@ -1,0 +1,181 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  z-index: 950;
+}
+
+.modal-contenedor {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  /* 🔹 Más ancho */
+  width: 900px;
+  max-width: 98vw;
+
+  max-height: 90vh;
+  overflow-y: auto;
+
+  box-sizing: border-box;
+
+  background: #111;
+  border: 1px solid #444;
+  border-radius: 10px;
+  padding: 20px;
+  z-index: 1000;
+
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.35);
+  color: #f5f5f5;
+}
+
+.titulo-modal {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #d4af37;
+  text-align: center;
+  font-size: 1.4rem;
+}
+
+/* 🔹 Grid de campos: 3 columnas en grande, 2 en medio, 1 en móvil */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 16px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    margin-bottom: 4px;
+    color: #d4af37;
+    font-size: 0.9rem;
+  }
+  /* 🔧 Icono del calendario (input type="date") en blanco */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 1;
+    cursor: pointer;
+}
+  input,
+  select {
+    padding: 7px 10px;
+    background: #222;
+    border: 1px solid #555;
+    border-radius: 6px;
+    color: #f5f5f5;
+    font-size: 0.9rem;
+
+    &:focus {
+      outline: none;
+      border-color: #d4af37;
+    }
+  }
+}
+
+/* Fila de botones ocupa las 3 columnas */
+.acciones {
+  grid-column: 1 / -1;
+  margin-top: 10px;
+
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  .btn-cerrar {
+    background: #333;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    color: #eee;
+    cursor: pointer;
+
+    &:hover {
+      background: #444;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+  }
+
+  .btn-guardar {
+    background: #d4af37;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    color: #111;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:hover {
+      background: #c49c2f;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+  }
+}
+.cargando-contenido {
+  padding: 40px 10px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #ddd;
+}
+
+
+/* Scroll bonito */
+.modal-contenedor::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-contenedor::-webkit-scrollbar-track {
+  background: #111;
+}
+.modal-contenedor::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 4px;
+  border: 1px solid #222;
+}
+.modal-contenedor::-webkit-scrollbar-thumb:hover {
+  background: #d4af37;
+}
+
+.modal-contenedor {
+  scrollbar-width: thin;
+  scrollbar-color: #444 #111;
+}
+
+
+
+/* 🔹 Pantallas medianas: 2 columnas */
+@media (max-width: 900px) {
+  .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* 🔹 Pantallas pequeñas: 1 columna */
+@media (max-width: 600px) {
+  .modal-contenedor {
+    width: 100%;
+    max-width: 100vw;
+    border-radius: 0;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.campo__requerido {
+  color: #ff4d4f; // rojo
+  margin-left: 2px;
+  font-weight: bold;
+}
+

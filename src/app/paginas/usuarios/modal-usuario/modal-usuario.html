@@ -1,0 +1,153 @@
+<div class="modal-overlay" (click)="cerrarModal()"></div>
+
+<div class="modal-contenedor">
+  <h2 class="titulo-modal">
+    {{ modo === 'crear' ? 'Nuevo usuario' : 'Editar usuario' }}
+  </h2>
+
+  <!-- Mientras se cargan sedes/áreas -->
+  <div *ngIf="cargandoDatos" class="cargando-contenido">
+    Cargando datos del usuario...
+  </div>
+
+  <!-- Cuando ya cargaron sedes y áreas -->
+  <form
+    *ngIf="!cargandoDatos"
+    [formGroup]="formulario"
+    class="form-grid"
+  >
+    <div class="campo">
+      <label>
+        Nombre <span class="campo__requerido">*</span>
+      </label>
+      <input type="text" formControlName="nombre" />
+    </div>
+
+    <div class="campo">
+      <label>
+        Apellido paterno <span class="campo__requerido">*</span>
+      </label>
+      <input type="text" formControlName="apellido_paterno" />
+    </div>
+
+    <div class="campo">
+      <label>
+        Apellido materno <span class="campo__requerido">*</span>
+      </label>
+      <input type="text" formControlName="apellido_materno" />
+    </div>
+
+    <div class="campo">
+      <label>
+        Tipo de documento <span class="campo__requerido">*</span>
+      </label>
+      <select formControlName="tipo_documento">
+        <option value="DNI">DNI</option>
+        <option value="CE">CE</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label>
+        Número de documento <span class="campo__requerido">*</span>
+      </label>
+      <input type="text" formControlName="numero_documento" />
+    </div>
+
+    <div class="campo">
+      <label>Fecha de nacimiento</label>
+      <input type="date" formControlName="fecha_nacimiento" />
+    </div>
+
+    <div class="campo">
+      <label>
+        Correo personal <span class="campo__requerido">*</span>
+      </label>
+      <input type="email" formControlName="email_personal" />
+    </div>
+
+    <div class="campo">
+      <label>Correo institucional</label>
+      <input type="email" formControlName="email_institucional" />
+    </div>
+
+    <div class="campo">
+      <label>Teléfono</label>
+      <input type="text" formControlName="telefono_celular" />
+    </div>
+
+    <div class="campo">
+      <label>
+        Rol <span class="campo__requerido">*</span>
+      </label>
+      <select formControlName="rol_id">
+        <option *ngFor="let rol of roles" [value]="rol.id">
+          {{ rol.nombre }}
+        </option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label>
+        Sede <span class="campo__requerido">*</span>
+      </label>
+      <select formControlName="sede_id">
+        <option value="" disabled>Seleccione una sede</option>
+        <option *ngFor="let sede of sedes" [value]="sede.id">
+          {{ sede.nombre }}
+        </option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label>
+        Área <span class="campo__requerido">*</span>
+      </label>
+      <select formControlName="area_id">
+        <option value="" disabled>Seleccione un área</option>
+        <option *ngFor="let area of areas" [value]="area.id">
+          {{ area.nombre }}
+        </option>
+      </select>
+    </div>
+
+
+    <div class="campo">
+      <label>
+        Estado <span class="campo__requerido">*</span>
+      </label>
+      <select formControlName="activo">
+        <option [ngValue]="true">Activo</option>
+        <option [ngValue]="false">Inactivo</option>
+      </select>
+    </div>
+
+    <div class="acciones">
+      <button
+        type="button"
+        class="btn-cerrar"
+        (click)="cerrarModal()"
+        [disabled]="guardando"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="btn-guardar"
+        (click)="guardarModal()"
+        [disabled]="guardando"
+      >
+        <ng-container *ngIf="!guardando">
+          {{ modo === 'crear' ? 'Guardar' : 'Actualizar' }}
+        </ng-container>
+        <ng-container *ngIf="guardando">
+          Guardando...
+        </ng-container>
+      </button>
+    </div>
+  </form>
+</div>
+
+
+

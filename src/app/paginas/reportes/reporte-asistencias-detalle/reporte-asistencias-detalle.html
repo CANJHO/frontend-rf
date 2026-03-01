@@ -1,0 +1,75 @@
+<div class="reporte">
+  <h2 class="titulo">Asistencia detalle</h2>
+  <p class="descripcion">
+    Exporta el detalle de marcajes por empleado dentro de un rango de fechas.
+    Por performance, se recomienda filtrar por Usuario o por Sede.
+  </p>
+
+  <div class="filtros">
+    <div class="fila">
+      <div class="campo">
+        <span>Desde</span>
+        <input type="date" [(ngModel)]="desde" />
+      </div>
+      <div class="campo">
+        <span>Hasta</span>
+        <input type="date" [(ngModel)]="hasta" />
+      </div>
+    </div>
+
+    <div class="fila">
+      <!-- Usuario: buscador -->
+      <div class="campo campo-buscador">
+        <span>Usuario (opcional)</span>
+
+        <div class="input-wrap">
+          <input
+            type="text"
+            [(ngModel)]="usuarioQuery"
+            (input)="onUsuarioInput()"
+            placeholder="Buscar por DNI o nombre..."
+            autocomplete="off"
+          />
+          <button *ngIf="usuarioQuery" type="button" class="clear" (click)="limpiarUsuario()">×</button>
+        </div>
+
+        <div class="sugerencias" *ngIf="usuariosSugeridos.length > 0">
+          <button
+            type="button"
+            class="sugerencia"
+            *ngFor="let u of usuariosSugeridos"
+            (click)="seleccionarUsuario(u)"
+          >
+            <div class="s1">{{ u.nombreCompleto }}</div>
+            <div class="s2" *ngIf="u.numero_documento">DNI: {{ u.numero_documento }}</div>
+          </button>
+        </div>
+
+        <div class="seleccion" *ngIf="usuarioSeleccionado">
+          Seleccionado:
+          <b>{{ usuarioSeleccionado.nombreCompleto }}</b>
+          <span *ngIf="usuarioSeleccionado.numero_documento"> - {{ usuarioSeleccionado.numero_documento }}</span>
+        </div>
+      </div>
+
+      <!-- Sede: dropdown -->
+      <div class="campo">
+        <span>Sede (opcional)</span>
+        <select [(ngModel)]="sedeId" (ngModelChange)="onSedeChange($event)">
+          <option value="">Todas las sedes</option>
+          <option *ngFor="let s of sedes" [value]="s.id">{{ s.nombre }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="acciones">
+    <button class="btn" (click)="descargarDetalleExcel()" [disabled]="descargando">
+      {{ descargando ? 'Generando...' : 'Descargar detalle (Excel)' }}
+    </button>
+
+    <button class="btn" (click)="descargarDetallePdf()" [disabled]="descargando">
+      {{ descargando ? 'Generando...' : 'PDF detalle' }}
+    </button>
+  </div>
+</div>

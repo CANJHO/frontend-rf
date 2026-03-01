@@ -1,1 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
+/* Que toda la página sea negra y sin margenes raros */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #000;     /* fondo negro por defecto */
+}
+
+/* Evitar franjas blancas por desbordes horizontales */
+body {
+  overflow-x: hidden;
+}
+
+/* Asegurar que el root siempre ocupe el alto completo */
+app-root {
+  display: block;
+  min-height: 100vh;
+}

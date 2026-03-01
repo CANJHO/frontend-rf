@@ -1,0 +1,176 @@
+<div class="kiosko">
+  <!-- 🔺 Encabezado -->
+  <header class="kiosko__header">
+    <div class="header__logo">
+      <img src="logo.ico" alt="Logo" />
+      <div class="header__titulos">
+        <div class="header__app">REGISTRO DE ASISTENCIA</div>
+        <div class="header__sub">Kiosko de marcaje</div>
+      </div>
+    </div>
+
+    <div class="header__fecha-hora">
+      <div class="header__fecha">
+        {{ hoy | date : "EEEE, d 'de' MMMM 'de' y" : "" : "es-PE" }}
+      </div>
+      <div class="header__hora">
+        {{ reloj }}
+      </div>
+    </div>
+  </header>
+
+  <!-- 🔸 Cuerpo -->
+  <main class="kiosko__body">
+    <!-- PANEL IZQUIERDO: lector + mensajes + instrucciones -->
+    <section class="kiosko__panel-form">
+      <div class="panel-form__contenedor">
+        <h1 class="panel-form__titulo">Escanea tu credencial</h1>
+        <p class="panel-form__texto">
+          Acerca tu fotocheck al lector de código de barras. Para pruebas,
+          puedes escribir manualmente el código del empleado.
+        </p>
+
+        <label class="panel-form__label">
+          Código escaneable
+          <span class="panel-form__label-help">(DNI con prefijo, etc.)</span>
+        </label>
+
+        <div class="panel-form__input-row">
+          <input
+            type="text"
+            [(ngModel)]="inputCodigo"
+            class="panel-form__input"
+            [readonly]="procesando"
+            (keyup.enter)="onRegistrarAuto()"
+            autofocus
+          />
+
+          <button
+            type="button"
+            class="btn btn--gris"
+            (click)="limpiar()"
+            [disabled]="procesando || !inputCodigo"
+          >
+            Limpiar
+          </button>
+        </div>
+
+        <!-- ✅ MODO GERENCIA: SIN BOTONES IN/OUT (todo automático) -->
+
+        <!-- Instrucciones rápidas -->
+        <div class="panel-form__instrucciones">
+          <h2>Instrucciones rápidas</h2>
+          <ol>
+            <li>Asegúrate de tener tu fotocheck a la mano.</li>
+            <li>
+              Acércalo al lector hasta escuchar el sonido de lectura del código.
+            </li>
+            <li>Verifica que el código haya aparecido en la pantalla.</li>
+            <li>
+              El sistema registrará automáticamente el evento correspondiente
+              (Entrada, Salida a refrigerio, Retorno de refrigerio o Salida).
+            </li>
+          </ol>
+          <p class="panel-info__nota">
+            Si ves un mensaje de error, comunícate con
+            <strong>Recursos Humanos</strong>.
+          </p>
+        </div>
+
+        <!-- Mensajes de estado -->
+        <div class="panel-form__estado">
+          <div class="estado estado--procesando" *ngIf="procesando">
+            Procesando marcaje...
+          </div>
+
+          <div
+            *ngIf="!procesando && mensaje"
+            class="estado"
+            [ngClass]="{
+              'estado--ok': mensaje.ok,
+              'estado--pendiente': !mensaje.ok
+            }"
+          >
+            <div class="estado__titulo">
+              {{
+                mensaje.evento === 'JORNADA_IN'
+                  ? 'ENTRADA registrada'
+                  : mensaje.evento === 'REFRIGERIO_OUT'
+                    ? 'SALIDA A REFRIGERIO registrada'
+                    : mensaje.evento === 'REFRIGERIO_IN'
+                      ? 'RETORNO DE REFRIGERIO registrado'
+                      : mensaje.evento === 'JORNADA_OUT'
+                        ? 'SALIDA registrada'
+                        : 'Marcaje registrado'
+              }}
+              <span *ngIf="mensaje.estado === 'pendiente'">
+                (pendiente de validación)
+              </span>
+            </div>
+
+            <!-- ✅ Tardanza solo si fue JORNADA_IN -->
+            <div
+              class="estado__detalle"
+              *ngIf="mensaje.evento === 'JORNADA_IN' && mensaje.minutos_tarde != null"
+            >
+              Tardanza de {{ mensaje.minutos_tarde }} minuto(s).
+            </div>
+          </div>
+
+          <div *ngIf="!procesando && errorTexto" class="estado estado--error">
+            {{ errorTexto }}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL DERECHO: FOTO GRANDE + datos del empleado / reloj -->
+    <section class="kiosko__panel-info">
+      <!-- Cuando HAY empleado, mostramos la tarjeta gigante -->
+      <ng-container *ngIf="mensaje?.empleado as emp; else relojPanel">
+        <div class="panel-info__empleado">
+          <div class="empleado-card empleado-card--giant">
+            <div
+              class="empleado-card__foto empleado-card__foto--giant"
+              *ngIf="emp.foto_url; else sinFotoGrande"
+            >
+              <img [src]="emp.foto_url" alt="Foto del empleado" />
+            </div>
+            <ng-template #sinFotoGrande>
+              <div
+                class="empleado-card__foto empleado-card__foto--giant empleado-card__foto--placeholder"
+              >
+                SIN FOTO
+              </div>
+            </ng-template>
+
+            <div class="empleado-card__datos empleado-card__datos--giant">
+              <div class="empleado-card__nombre empleado-card__nombre--giant">
+                {{ getNombreEmpleado() }}
+              </div>
+
+              <div class="empleado-card__meta">
+                <span class="tag" *ngIf="emp.sede">Sede: {{ emp.sede }}</span>
+                <span class="tag" *ngIf="emp.area">Área: {{ emp.area }}</span>
+              </div>
+
+              <div class="empleado-card__hora">
+                Marca registrada a las {{ reloj }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Cuando AÚN no hay marcaje, mostramos solo el reloj gigante -->
+      <ng-template #relojPanel>
+        <div class="panel-info__reloj">
+          <div class="reloj-giant">
+            {{ reloj }}
+          </div>
+        </div>
+      </ng-template>
+    </section>
+  </main>
+</div>
+

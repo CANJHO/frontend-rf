@@ -1,0 +1,421 @@
+/* =======================================
+   LAYOUT GENERAL
+   ======================================= */
+
+.layout-panel {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at top, #111 0, #050505 40%, #000 100%);
+  color: #ffffff;
+}
+
+/* =======================================
+   HEADER
+   ======================================= */
+
+.panel-header {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  background: #050505;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+  position: sticky;
+  top: 0;
+  z-index: 120;
+}
+
+.panel-header__titulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.panel-header__logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+}
+
+.panel-header__textos {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.panel-header__app {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.panel-header__sub {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #d4af37;
+}
+
+/* ✅ Hamburguesa (solo móvil) */
+.burger-btn {
+  display: none;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  background: rgba(212, 175, 55, 0.06);
+  color: #d4af37;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  cursor: pointer;
+  place-items: center;
+  transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+
+  svg {
+    width: 22px;
+    height: 22px;
+    fill: #d4af37;
+  }
+
+  &:hover {
+    background: rgba(212, 175, 55, 0.10);
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.18);
+    transform: translateY(-1px);
+  }
+}
+
+/* =======================================
+   PERFIL (tu dropdown anterior)
+   ======================================= */
+
+.panel-header__usuario {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.user-trigger {
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.35rem 0.45rem;
+  border-radius: 12px;
+  transition: background 0.15s ease, transform 0.12s ease;
+
+  &:hover {
+    background: rgba(212, 175, 55, 0.10);
+  }
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.1;
+}
+
+.user-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #ffffff;
+}
+
+.user-role {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #d4af37, #b1891f);
+  color: #050505;
+  font-weight: 900;
+  font-size: 0.9rem;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
+}
+
+.user-caret {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.9rem;
+  margin-left: 2px;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 240px;
+  background: #ffffff;
+  color: #111;
+  border-radius: 16px;
+  padding: 10px 8px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(17, 24, 39, 0.10);
+  z-index: 200;
+}
+
+.user-item {
+  width: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #111;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: background 0.12s ease, transform 0.12s ease;
+
+  &:hover {
+    background: rgba(17, 24, 39, 0.06);
+    transform: translateY(-1px);
+  }
+}
+
+.user-item__icon {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: rgba(17, 24, 39, 0.70);
+  }
+}
+
+.user-item--danger {
+  color: #d64545;
+
+  .user-item__icon svg {
+    fill: #d64545;
+  }
+
+  &:hover {
+    background: rgba(214, 69, 69, 0.08);
+  }
+}
+
+.user-divider {
+  height: 1px;
+  margin: 6px 10px;
+  background: rgba(17, 24, 39, 0.10);
+}
+
+/* =======================================
+   BODY
+   ======================================= */
+
+.panel-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+/* =======================================
+   SIDEBAR (desktop)
+   ======================================= */
+
+.panel-sidebar {
+  width: 240px;
+  padding: 1rem 1.25rem;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #050505 0, #040404 45%, #000 100%);
+  border-right: 1px solid rgba(212, 175, 55, 0.22);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sidebar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.sidebar-close {
+  display: none;
+  border: none;
+  background: transparent;
+  color: rgba(212, 175, 55, 0.9);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.25rem 0.4rem;
+  border-radius: 10px;
+
+  &:hover {
+    background: rgba(212, 175, 55, 0.10);
+  }
+}
+
+.sidebar__titulo {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: rgba(212, 175, 55, 0.9);
+  margin: 0;
+}
+
+.sidebar__item {
+  display: block;
+  padding: 0.45rem 0.75rem;
+  margin: 0.1rem 0;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  color: #f5f5f5;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.12s ease;
+
+  &:hover {
+    background: rgba(212, 175, 55, 0.18);
+    color: #ffffff;
+    transform: translateX(2px);
+  }
+
+  &.activo {
+    background: linear-gradient(135deg, #d4af37, #b1891f);
+    color: #050505;
+    font-weight: 700;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+  }
+}
+
+.sidebar__grupo {
+  margin-top: 0.6rem;
+}
+
+.sidebar__grupo-titulo {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: transparent;
+  border: none;
+  padding: 0.15rem 0.75rem;
+  margin-bottom: 0.15rem;
+  cursor: pointer;
+
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(212, 175, 55, 0.85);
+  text-align: left;
+
+  &:hover {
+    color: #ffd76a;
+  }
+}
+
+.sidebar__grupo-icon {
+  font-size: 0.8rem;
+  transition: transform 0.15s ease;
+}
+.sidebar__grupo-icon--open {
+  transform: rotate(180deg);
+}
+
+.sidebar__item--sub {
+  padding-left: 1.6rem;
+  font-size: 0.85rem;
+}
+
+/* Contenido */
+.panel-contenido {
+  flex: 1;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+/* =======================================
+   ✅ MÓVIL: Drawer + Overlay
+   ======================================= */
+
+.sidebar-overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .burger-btn {
+    display: grid;
+  }
+
+  /* overlay */
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(2px);
+    z-index: 140;
+  }
+
+  /* sidebar drawer */
+  .panel-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: min(86vw, 320px);
+    z-index: 150;
+
+    padding: 1rem 1rem;
+    border-right: 1px solid rgba(212, 175, 55, 0.22);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
+
+    transform: translateX(-110%);
+    transition: transform 0.18s ease;
+  }
+
+  .panel-sidebar--open {
+    transform: translateX(0);
+  }
+
+  .sidebar-close {
+    display: inline-flex;
+  }
+
+  /* evita que el contenido se “mueva” raro */
+  .panel-body {
+    flex-direction: column;
+  }
+
+  .panel-contenido {
+    padding: 0.9rem;
+  }
+
+  /* En móvil ocultamos texto usuario y dejamos avatar */
+  .user-info {
+    display: none;
+  }
+}

@@ -1,0 +1,281 @@
+/* =======================================
+   CONTENEDOR GENERAL
+   ======================================= */
+.contenedor-usuarios {
+  padding: 20px;
+  color: #f1f1f1;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.cargando {
+  color: #d4af37;
+  font-size: 16px;
+}
+
+.mensaje-error,
+.sin-registros {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: rgba(255, 80, 80, 0.08);
+  border: 1px solid rgba(255, 80, 80, 0.25);
+  border-radius: 10px;
+}
+
+/* =======================================
+   CABECERA
+   ======================================= */
+.cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.2rem;
+}
+
+.cabecera__left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cabecera .titulo {
+  margin: 0;
+}
+
+.subtitulo {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+}
+
+/* Botones arriba */
+.acciones-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem; /* ✅ espacio entre Volver/Refrescar */
+}
+
+/* =======================================
+   PANEL CREAR
+   ======================================= */
+.panel-crear {
+  margin-top: 14px;
+  background: #101010;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.panel-crear__titulo {
+  color: #d4af37;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.panel-crear__fila {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo--grow {
+  flex: 1 1 320px;
+}
+
+.campo label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+/* 🔧 Icono del calendario (input type="time") en blanco */
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 1;
+  cursor: pointer;
+}
+
+.campo input,
+.campo select {
+  padding: 0.45rem 0.7rem;
+  border-radius: 8px;
+  background: #111;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: #f5f5f5;
+  outline: none;
+}
+
+.campo input:focus,
+.campo select:focus {
+  border-color: #d4af37;
+}
+
+/* =======================================
+   TABLA
+   ======================================= */
+.tabla-usuarios {
+  width: 100%;
+  border-collapse: collapse;
+  background: #111;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 14px;
+
+  th,
+  td {
+    vertical-align: middle;
+  }
+
+  th {
+    background: #1a1a1a;
+    padding: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    color: #d4af37;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #222;
+    font-size: 14px;
+  }
+
+  tr:hover td {
+    background: rgba(212, 175, 55, 0.08);
+  }
+}
+
+.th-acciones {
+  text-align: center;
+}
+
+/* =======================================
+   BADGES (ESTADO)
+   ======================================= */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+.badge--ok {
+  background: rgba(63, 174, 63, 0.15);
+  border-color: rgba(63, 174, 63, 0.35);
+  color: #8df58d;
+}
+
+.badge--warn {
+  background: rgba(212, 175, 55, 0.12);
+  border-color: rgba(212, 175, 55, 0.35);
+  color: #d4af37;
+}
+
+.badge--bad {
+  background: rgba(255, 80, 80, 0.12);
+  border-color: rgba(255, 80, 80, 0.35);
+  color: #ff6b6b;
+}
+
+/* =======================================
+   BOTONES
+   ======================================= */
+.boton-accion {
+  background: #d4af37;
+  color: #111;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  cursor: pointer;
+  font-weight: 800;
+  transition: background 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: #c49c2f;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.boton-accion--sec {
+  background: #2a2a2a;
+  color: #f1f1f1;
+
+  &:hover {
+    background: #333;
+  }
+}
+
+/* =======================================
+   ACCIONES POR FILA
+   ======================================= */
+td.acciones {
+  text-align: center;
+}
+
+.acciones-contenedor {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-mini {
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: 0.15s ease;
+  white-space: nowrap;
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.btn-mini--ok {
+  background: rgba(63, 174, 63, 0.2);
+  color: #b6ffb6;
+  border: 1px solid rgba(63, 174, 63, 0.35);
+}
+
+.btn-mini--warn {
+  background: rgba(212, 175, 55, 0.18);
+  color: #ffd86a;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+.btn-mini--bad {
+  background: rgba(255, 80, 80, 0.16);
+  color: #ff9a9a;
+  border: 1px solid rgba(255, 80, 80, 0.35);
+}

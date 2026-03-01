@@ -1,0 +1,698 @@
+.horario-wrapper {
+  color: #f5f5f5;
+  font-family: 'Segoe UI', sans-serif;
+  padding-top: 0.5rem;
+}
+
+/* =======================================
+   HEADER
+   ======================================= */
+.horario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.horario-header .btn-volver {
+  background: transparent;
+  border: 1px solid rgba(212, 175, 55, 0.6);
+  color: #d4af37;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(212, 175, 55, 0.15);
+  }
+}
+
+.titulo-grupo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+}
+
+.titulo-grupo .titulo {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.titulo-grupo .subtitulo {
+  font-size: 0.9rem;
+  color: #cccccc;
+
+  span {
+    color: #f6c326;
+    font-weight: 600;
+  }
+}
+
+/* =======================================
+   FECHA DE VIGENCIA
+   ======================================= */
+.vigencia-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+
+  label {
+    font-size: 0.9rem;
+    color: #f6e6a5;
+    font-weight: 500;
+  }
+  
+  /* 🔧 Icono del calendario (input type="date") en blanco */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  input[type='date'] {
+    background: #050505;
+    border-radius: 999px;
+    border: 1px solid rgba(212, 175, 55, 0.7);
+    color: #f5f5f5;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.85rem;
+    outline: none;
+
+    &:focus {
+      box-shadow: 0 0 0 1px rgba(246, 195, 38, 0.8);
+    }
+  }
+}
+
+/* =======================================
+   GRID SEMANAL
+   ======================================= */
+.semana-grid {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+
+  /* Desktop ancho: 4 columnas (Lun–Jue / Vie–Dom) */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+/* Breakpoints */
+@media (max-width: 1200px) {
+  .semana-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .semana-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .semana-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =======================================
+   TARJETA DÍA
+   ======================================= */
+.dia-card {
+  background: radial-gradient(circle at top left, #1b1b1b, #050505 55%);
+  border-radius: 14px;
+  padding: 0.85rem 0.9rem 0.9rem;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  position: relative;
+  overflow: hidden;
+
+  /* detalle suave tipo calendario */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(246, 195, 38, 0.08), transparent 55%);
+    opacity: 0.8;
+    pointer-events: none;
+  }
+}
+
+.dia-titulo {
+  position: relative;
+  z-index: 1;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f6c326;
+  margin-bottom: 0.1rem;
+}
+
+/* =======================================
+   TOGGLE DESCANSO
+   ======================================= */
+.toggle-linea {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: #f5f5f5;
+  cursor: pointer;
+
+  input[type='checkbox'] {
+    width: 18px;
+    height: 18px;
+    accent-color: #f6c326;
+    cursor: pointer;
+  }
+
+  span {
+    user-select: none;
+  }
+}
+
+/* =======================================
+   BLOQUE DE TURNOS
+   ======================================= */
+.turnos {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.2rem;
+}
+
+.turno-bloque {
+  background: rgba(0, 0, 0, 0.65);
+  border-radius: 10px;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.turno-titulo {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(246, 195, 38, 0.85);
+  margin-bottom: 0.25rem;
+}
+
+.turno-campos {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.4rem;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.78rem;
+    color: #e2e2e2;
+  }
+  /* 🔧 Icono del calendario (input type="time") en blanco */
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 1;
+    cursor: pointer;
+  }
+  input[type='time'] {
+    margin-top: 0.15rem;
+    background: #050505;
+    border-radius: 7px;
+    border: 1px solid rgba(212, 175, 55, 0.6);
+    color: #f5f5f5;
+    padding: 0.15rem 0.35rem;
+    font-size: 0.8rem;
+    outline: none;
+    min-width: 0;
+
+    &:focus {
+      box-shadow: 0 0 0 1px rgba(246, 195, 38, 0.9);
+    }
+  }
+}
+
+/* =======================================
+   TOLERANCIA
+   ======================================= */
+.tolerancia-bloque {
+  margin-top: 0.1rem;
+  padding-top: 0.35rem;
+  border-top: 1px dashed rgba(212, 175, 55, 0.3);
+
+  label {
+    font-size: 0.8rem;
+    color: #e2e2e2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.3rem;
+  }
+
+  input[type='number'] {
+    width: 70px;
+    background: #050505;
+    border-radius: 999px;
+    border: 1px solid rgba(212, 175, 55, 0.6);
+    color: #f5f5f5;
+    padding: 0.18rem 0.4rem;
+    font-size: 0.8rem;
+    text-align: center;
+    outline: none;
+
+    &:focus {
+      box-shadow: 0 0 0 1px rgba(246, 195, 38, 0.9);
+    }
+  }
+}
+
+/* =======================================
+   BOTÓN GUARDAR
+   ======================================= */
+.guardar-box {
+  margin-top: 0.8rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-guardar {
+  padding: 0.45rem 1.4rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: #111;
+  border: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 0 10px rgba(39, 174, 96, 0.55);
+  transition: all 0.15s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 14px rgba(39, 174, 96, 0.9);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+/* =======================================
+   ESTADOS
+   ======================================= */
+.estado-cargando,
+.estado-error {
+  margin-top: 1.2rem;
+  font-size: 0.95rem;
+}
+
+.estado-cargando {
+  color: #f6c326;
+}
+
+.estado-error {
+  color: #ff6b6b;
+}
+/* =======================================
+   BOTONES ACCIÓN
+   ======================================= */
+.guardar-box {
+  margin-top: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.btn-historial {
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid rgba(212, 175, 55, 0.7);
+  color: #f6c326;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: rgba(212, 175, 55, 0.12);
+  }
+}
+
+.btn-guardar {
+  padding: 0.45rem 1.4rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: #111;
+  border: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 0 10px rgba(39, 174, 96, 0.55);
+  transition: all 0.15s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 14px rgba(39, 174, 96, 0.9);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+/* =======================================
+   HISTORIAL
+   ======================================= */
+.historial-wrapper {
+  margin-top: 1.2rem;
+  padding: 0.8rem 1rem;
+  border-radius: 14px;
+  background: radial-gradient(circle at top left, #141414, #050505 55%);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+}
+
+.historial-titulo {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f6c326;
+  margin-bottom: 0.6rem;
+}
+
+.historial-estado {
+  font-size: 0.85rem;
+  color: #e2e2e2;
+}
+
+.historial-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-top: 0.3rem;
+}
+
+.historial-item {
+  padding: 0.5rem 0.6rem;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.historial-fechas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.83rem;
+  color: #f5f5f5;
+}
+
+.historial-fecha-inicio,
+.historial-fecha-fin {
+  opacity: 0.9;
+}
+
+.historial-badge {
+  margin-left: auto;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 1px solid rgba(212, 175, 55, 0.75);
+  color: #f6c326;
+}
+
+.historial-badge.vigente {
+  background: rgba(46, 204, 113, 0.1);
+  border-color: rgba(46, 204, 113, 0.9);
+  color: #2ecc71;
+}
+
+.historial-resumen {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: #cccccc;
+}
+/* =======================================================
+   EXCEPCIONES DE HORARIO POR FECHA
+   ======================================================= */
+
+.excepciones-wrapper {
+  margin-top: 2rem;
+  padding: 1.5rem 1.7rem 1.7rem;
+  border-radius: 18px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: radial-gradient(circle at top left, #141414, #050505 60%);
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.6);
+  color: #f5f5f5;
+}
+
+.excepciones-header {
+  margin-bottom: 1.1rem;
+
+  h3 {
+    margin: 0 0 0.3rem 0;
+    font-size: 1.15rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f6c326;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #d0d0d0;
+  }
+}
+
+.excepciones-body {
+  display: flex;
+  gap: 1.6rem;
+  align-items: flex-start;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
+}
+
+/* LADO IZQUIERDO: FORMULARIO */
+.ex-form {
+  flex: 1.1;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 14px;
+  padding: 1rem 1.1rem 1.1rem;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.ex-form .campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.75rem;
+
+  label {
+    font-size: 0.82rem;
+    color: #f6e6a5;
+    margin-bottom: 0.2rem;
+  }
+  /* 🔧 Icono del calendario (input type="date") en blanco */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 1;
+    cursor: pointer;
+  }
+  /* 🔧 Icono del calendario (input type="time") en blanco */
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  input[type='date'],
+  input[type='time'],
+  select,
+  textarea {
+    background: #050505;
+    border-radius: 999px;
+    border: 1px solid rgba(212, 175, 55, 0.7);
+    color: #f5f5f5;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.85rem;
+    outline: none;
+  }
+
+  textarea {
+    border-radius: 10px;
+    resize: vertical;
+    min-height: 70px;
+    line-height: 1.35;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    box-shadow: 0 0 0 1px rgba(246, 195, 38, 0.9);
+  }
+}
+
+.fila-horas {
+  display: flex;
+  gap: 0.7rem;
+
+  .campo {
+    flex: 1;
+  }
+}
+
+.check-linea {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.4rem 0 0.8rem;
+  font-size: 0.83rem;
+  color: #f5f5f5;
+  cursor: pointer;
+
+  input[type='checkbox'] {
+    width: 18px;
+    height: 18px;
+    accent-color: #f6c326;
+    cursor: pointer;
+  }
+
+  span {
+    user-select: none;
+  }
+}
+
+.ex-form .subtitulo {
+  margin: 0.2rem 0 0.4rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(246, 195, 38, 0.9);
+}
+
+/* BOTONES EXCEPCIONES */
+.acciones-ex {
+  margin-top: 0.8rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-guardar-excepcion {
+  padding: 0.4rem 1.4rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #2980b9, #3498db);
+  color: #fefefe;
+  box-shadow: 0 0 10px rgba(41, 128, 185, 0.6);
+  transition: all 0.15s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 0 14px rgba(41, 128, 185, 0.95);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+/* LADO DERECHO: ESTADO DE LA FECHA */
+.ex-estado {
+  flex: 0.9;
+  background: radial-gradient(circle at top right, rgba(246, 195, 38, 0.06), rgba(0, 0, 0, 0.95));
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  min-height: 180px;
+}
+
+.ex-estado__cargando {
+  font-size: 0.85rem;
+  color: #f6c326;
+}
+
+.ex-estado__sin h4,
+.ex-estado__con h4 {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  color: #f6c326;
+}
+
+.ex-estado__sin p,
+.ex-estado__con p {
+  margin: 0 0 0.3rem;
+  font-size: 0.85rem;
+  color: #e0e0e0;
+}
+
+.ex-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.16rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(246, 195, 38, 0.12);
+  border: 1px solid rgba(246, 195, 38, 0.4);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.6rem;
+  color: #f6c326;
+}
+
+.btn-eliminar-excepcion {
+  margin-top: 0.7rem;
+  padding: 0.35rem 1.1rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: #fefefe;
+  box-shadow: 0 0 10px rgba(192, 57, 43, 0.65);
+  transition: all 0.15s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 0 14px rgba(231, 76, 60, 0.95);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+}

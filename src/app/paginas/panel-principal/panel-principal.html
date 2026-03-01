@@ -1,0 +1,249 @@
+<div class="layout-panel">
+  <header class="panel-header">
+    <div class="panel-header__titulo">
+      <!-- ✅ Botón hamburguesa solo móvil -->
+      <button
+        type="button"
+        class="burger-btn"
+        (click)="toggleSidebar()"
+        aria-label="Abrir menú"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z" />
+        </svg>
+      </button>
+
+      <span class="panel-header__logo">
+        <img src="logo.ico" alt="logo" />
+      </span>
+
+      <div class="panel-header__textos">
+        <div class="panel-header__app">Registro de Asistencia</div>
+        <div class="panel-header__sub">Panel de gestión</div>
+      </div>
+    </div>
+
+    <!-- PERFIL / DROPDOWN (tu diseño anterior) -->
+    <div class="panel-header__usuario" *ngIf="usuario$ | async as usuario">
+      <button
+        type="button"
+        class="user-trigger"
+        (click)="toggleUserMenu($event)"
+        [attr.aria-expanded]="userMenuOpen"
+        aria-haspopup="menu"
+      >
+        <div class="user-info">
+          <div class="user-name">
+            {{ usuario.nombre.split(' ')[0] }} {{ usuario.apellido_paterno }}
+          </div>
+          <div class="user-role">{{ usuario.rol }}</div>
+        </div>
+
+        <div class="user-avatar">
+          {{ getIniciales(usuario.nombre, usuario.apellido_paterno) }}
+        </div>
+
+        <span class="user-caret" aria-hidden="true">▾</span>
+      </button>
+
+      <div class="user-dropdown" *ngIf="userMenuOpen" role="menu">
+        <a class="user-item" routerLink="/panel" (click)="closeUserMenu()">
+          <span class="user-item__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 3l9 8h-3v10h-5v-6H11v6H6V11H3l9-8z" />
+            </svg>
+          </span>
+          <span class="user-item__text">Home</span>
+        </a>
+
+        <div class="user-divider"></div>
+
+        <button
+          type="button"
+          class="user-item user-item--danger"
+          (click)="closeUserMenu(); cerrarSesion()"
+        >
+          <span class="user-item__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M10 17l1.41-1.41L9.83 14H21v-2H9.83l1.58-1.59L10 9l-5 5 5 5zM4 4h8V2H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h8v-2H4V4z"
+              />
+            </svg>
+          </span>
+          <span class="user-item__text">Cerrar sesión</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ✅ Overlay móvil -->
+  <div
+    class="sidebar-overlay"
+    *ngIf="sidebarOpen"
+    (click)="closeSidebar()"
+  ></div>
+
+  <div class="panel-body">
+    <!-- ✅ SIDEBAR (desktop normal / móvil drawer) -->
+    <nav class="panel-sidebar" [class.panel-sidebar--open]="sidebarOpen">
+      <div class="sidebar-top">
+        <div class="sidebar__titulo">Menú</div>
+
+        <!-- Botón cerrar en móvil -->
+        <button
+          type="button"
+          class="sidebar-close"
+          (click)="closeSidebar()"
+          aria-label="Cerrar menú"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Inicio -->
+      <a
+        routerLink="/panel"
+        routerLinkActive="activo"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="sidebar__item"
+        (click)="closeSidebarOnMobile()"
+      >
+        Inicio
+      </a>
+
+      <!-- Grupo: Usuarios -->
+      <div class="sidebar__grupo">
+        <button
+          type="button"
+          class="sidebar__grupo-titulo"
+          (click)="toggleGrupoUsuarios()"
+        >
+          <span>Usuarios</span>
+          <span
+            class="sidebar__grupo-icon"
+            [class.sidebar__grupo-icon--open]="grupoUsuariosAbierto"
+          >
+            ▾
+          </span>
+        </button>
+
+        <ng-container *ngIf="grupoUsuariosAbierto">
+          <a
+            routerLink="/panel/usuarios"
+            routerLinkActive="activo"
+            class="sidebar__item sidebar__item--sub"
+            (click)="closeSidebarOnMobile()"
+          >
+            Ver usuarios
+          </a>
+
+          <a
+            routerLink="/panel/areas"
+            routerLinkActive="activo"
+            class="sidebar__item sidebar__item--sub"
+            (click)="closeSidebarOnMobile()"
+          >
+            Áreas
+          </a>
+
+          <a
+            routerLink="/panel/sedes"
+            routerLinkActive="activo"
+            class="sidebar__item sidebar__item--sub"
+            (click)="closeSidebarOnMobile()"
+          >
+            Sedes
+          </a>
+        </ng-container>
+      </div>
+
+      <!-- Grupo: Empleados -->
+      <div class="sidebar__grupo">
+        <button
+          type="button"
+          class="sidebar__grupo-titulo"
+          (click)="toggleGrupoEmpleados()"
+        >
+          <span>Empleados</span>
+          <span
+            class="sidebar__grupo-icon"
+            [class.sidebar__grupo-icon--open]="grupoEmpleadosAbierto"
+          >
+            ▾
+          </span>
+        </button>
+
+        <ng-container *ngIf="grupoEmpleadosAbierto">
+          <a
+            routerLink="/panel/empleados"
+            routerLinkActive="activo"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="sidebar__item sidebar__item--sub"
+            (click)="closeSidebarOnMobile()"
+          >
+            Listado de empleados
+          </a>
+
+          <a
+            routerLink="/panel/empleados/asistencias"
+            routerLinkActive="activo"
+            class="sidebar__item sidebar__item--sub"
+            (click)="closeSidebarOnMobile()"
+          >
+            Asistencias
+          </a>
+        </ng-container>
+      </div>
+
+      <!-- Grupo: Reportes -->
+      <div class="sidebar__grupo">
+        <button
+          type="button"
+          class="sidebar__grupo-titulo"
+          (click)="toggleGrupoReportes()"
+        >
+          <span>Reportes</span>
+          <span
+            class="sidebar__grupo-icon"
+            [class.sidebar__grupo-icon--open]="grupoReportesAbierto"
+          >
+            ▾
+          </span>
+        </button>
+
+        <ng-container *ngIf="grupoReportesAbierto">
+          <a
+            routerLink="/panel/reportes/usuarios"
+            routerLinkActive="activo"
+            class="sidebar__item sidebar__item--sub"
+            (click)="closeSidebarOnMobile()"
+          >
+            Reporte de usuarios
+          </a>
+
+          <a
+            routerLink="/panel/reportes/asistencias"
+            routerLinkActive="activo"
+            class="sidebar__item sidebar__item--sub"
+            (click)="closeSidebarOnMobile()"
+          >
+            Reporte de asistencias
+          </a>
+
+          <a
+            routerLink="/panel/reportes/asistencias-detalle"
+            fragment="detalle"
+            class="sidebar__item sidebar__item--sub"
+            (click)="closeSidebarOnMobile()"
+          >
+            Asistencia detalle
+          </a>
+        </ng-container>
+      </div>
+    </nav>
+
+    <main class="panel-contenido">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

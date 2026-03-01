@@ -1,0 +1,234 @@
+/* ===== CONTENEDOR GENERAL ===== */
+.contenedor-usuarios {
+  padding: 20px;
+  color: #f1f1f1;
+  font-family: 'Segoe UI', sans-serif;
+}
+/* ===== CABECERA ===== */
+.cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .titulo {
+    font-size: 23px;
+    font-weight: bold;
+    margin: 0;
+  }
+
+
+}
+
+
+/* Botones dorados */
+.boton-accion {
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  border: none;
+  background: #d4af37;
+  color: #111;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.boton-accion:hover {
+  background: #e0c15a;
+  transform: translateY(-1px);
+}
+
+.boton-accion:active {
+  transform: translateY(0);
+}
+
+/* Botón para Editar (más pequeño y compacto) */
+.boton-editar {
+  background: #333;
+  color: #eee;
+  padding: 5px 12px;
+
+  &:hover {
+    background: #444;
+  }
+}
+
+.boton-eliminar {
+  background: #b3261e;
+  color: #f5e7e7;
+}
+
+.boton-eliminar:hover {
+  background: #cf3c30;
+}
+
+/* Tabla */
+/* ===== TABLA ===== */
+.tabla-usuarios {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: #0e0e0e;
+  border-radius: 8px;
+  overflow: hidden;
+
+  thead {
+    background: #1c1c1c;
+
+    th {
+      padding: 12px;
+      text-align: left;
+      color: #f5c15d;
+      font-weight: normal;
+      border-bottom: 1px solid #333;
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background 0.2s;
+
+      &:hover {
+        background: #1a1a1a;
+      }
+
+      td {
+        padding: 10px;
+        border-bottom: 1px solid #222;
+        color: #e6e6e6;
+      }
+    }
+  }
+}
+
+.col-acciones {
+  display: flex;
+  gap: 8px;
+}
+
+/* Estado */
+.estado {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #fff;
+
+  &.activo {
+    background: #3fae3f;
+  }
+
+  &.inactivo {
+    background: #ff5252;
+  }
+}
+
+
+/* Mensajes */
+.cargando,
+.mensaje-error,
+.sin-registros {
+  margin-top: 1.2rem;
+  font-size: 0.95rem;
+}
+
+.cargando {
+  color: #f7e5b5;
+}
+
+.mensaje-error {
+  color: #ffb3b3;
+}
+
+.sin-registros {
+  color: #f7e5b5;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 900;
+}
+
+.modal-contenedor {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 420px;
+  max-width: 90vw;
+  transform: translate(-50%, -50%);
+  background: #050608;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.7);
+  padding: 1.5rem 1.8rem;
+  z-index: 901;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.9);
+}
+
+/* Título del modal */
+.titulo-modal {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: #f7e5b5;
+}
+
+/* Campos del formulario */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 0.9rem;
+}
+
+.campo label {
+  font-size: 0.85rem;
+  color: #e6d49f;
+}
+
+.campo input[type='text'] {
+  padding: 0.45rem 0.7rem;
+  border-radius: 4px;
+  border: 1px solid #555;
+  background: #111;
+  color: #f7e5b5;
+}
+
+.campo-check {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Botones del modal */
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.btn-cerrar {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #777;
+  background: #222;
+  color: #f7e5b5;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-guardar {
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  border: none;
+  background: #d4af37;
+  color: #111;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-guardar:hover {
+  background: #e0c15a;
+}
+

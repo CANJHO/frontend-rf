@@ -1,0 +1,254 @@
+/* ===== CONTENEDOR GENERAL ===== */
+.contenedor-usuarios {
+  padding: 20px;
+  color: #f1f1f1;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* ===== CABECERA ===== */
+.cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .titulo {
+    font-size: 23px;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .boton-accion {
+    background: #f5c15d;
+    color: #08090c;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s ease;
+
+    &:hover {
+      background: #d0a347;
+    }
+  }
+}
+
+/* ===== ESTADOS ===== */
+.cargando,
+.mensaje-error,
+.sin-registros {
+  margin-top: 20px;
+  padding: 12px;
+  background: #151515;
+  border-radius: 6px;
+  text-align: center;
+  border: 1px solid #333;
+}
+
+.mensaje-error {
+  border-left: 4px solid #ff5252;
+}
+
+.sin-registros {
+  border-left: 4px solid #f5c15d;
+}
+
+/* ===== TABLA ===== */
+.tabla-usuarios {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: #0e0e0e;
+  border-radius: 8px;
+  overflow: hidden;
+
+  thead {
+    background: #1c1c1c;
+
+    th {
+      padding: 12px;
+      text-align: left;
+      color: #f5c15d;
+      font-weight: normal;
+      border-bottom: 1px solid #333;
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background 0.2s;
+
+      &:hover {
+        background: #1a1a1a;
+      }
+
+      td {
+        padding: 10px;
+        border-bottom: 1px solid #222;
+        color: #e6e6e6;
+      }
+    }
+  }
+}
+
+/* ===== ESTADO BADGE ===== */
+.estado {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #fff;
+
+  &.activo {
+    background: #3fae3f;
+  }
+
+  &.inactivo {
+    background: #ff5252;
+  }
+}
+
+/* ===== BOTONES DE ACCIÓN ===== */
+.col-acciones {
+  display: flex;
+  gap: 8px;
+}
+
+.boton-accion {
+  background: #2a2a2a;
+  color: #f5c15d;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+
+  &:hover {
+    background: #3a3a3a;
+  }
+}
+
+.boton-editar {
+  color: #4db2ff;
+
+  &:hover {
+    color: #77c7ff;
+  }
+}
+
+.boton-eliminar {
+  color: #ff5252;
+
+  &:hover {
+    color: #ff7b7b;
+  }
+}
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(2px);
+  z-index: 999;
+}
+
+.modal-contenedor {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #111;
+  padding: 25px;
+  border-radius: 10px;
+  width: 420px;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0,0,0,0.6);
+
+  .titulo-modal {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #f5c15d;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .campo {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      margin-bottom: 5px;
+      color: #f5c15d;
+      font-size: 14px;
+    }
+
+    input[type="text"] {
+      padding: 8px;
+      background: #1b1b1b;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #fff;
+
+      &:focus {
+        outline: 1px solid #f5c15d;
+      }
+    }
+  }
+
+  .campo-check {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.4rem;
+
+    label {
+      font-size: 14px;
+      display: flex;
+      gap: 6px;
+      cursor: pointer;
+      color: #f1f1f1;
+    }
+  }
+
+  .mensaje-error {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #ff5252;
+  }
+
+  .acciones {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+
+    .btn-cerrar {
+      background: #2a2a2a;
+      color: #bbb;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: .2s;
+
+      &:hover {
+        background: #3a3a3a;
+      }
+    }
+
+    .btn-guardar {
+      background: #f5c15d;
+      color: #111;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: .2s;
+
+      &:hover {
+        background: #d0a347;
+      }
+    }
+  }
+}

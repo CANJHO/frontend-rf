@@ -1,0 +1,90 @@
+/* Capa que cubre toda la pantalla */
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: #08090c;          /* Fondo sólido */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 2000;
+
+  /* Animación */
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+
+/* Animación de entrada */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Animación de salida */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+
+.loader-contenido {
+  opacity: 0;
+  transform: scale(0.95);
+  animation: popIn 0.25s ease-out forwards;
+}
+
+@keyframes popIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+/* Texto "Cargando..." */
+.loader-texto {
+  color: #d4af37;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+/* Spinner circular */
+.loader-spinner {
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+  border: 3px solid rgba(212, 175, 55, 0.25);
+  border-top-color: #d4af37;
+
+  animation: girar 0.8s linear infinite;
+}
+
+/* Animación del spinner */
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Opcional: en pantallas muy pequeñas ajustamos un poco */
+@media (max-width: 480px) {
+  .loader-contenido {
+    width: 80%;
+    padding: 16px 18px;
+  }
+
+  .loader-texto {
+    font-size: 0.85rem;
+    text-align: center;
+  }
+}
