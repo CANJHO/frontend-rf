@@ -172,6 +172,31 @@ export class ReporteAsistenciasComponent implements OnInit, OnDestroy {
     const url = this.reportes.buildResumenPdfUrl(this.buildParams());
     this.descargarPorUrl(url, 'reporte_asistencias_resumen.pdf');
   }
+    descargarResumenDiaExcel() {
+    if (this.descargando) return;
+
+    // ✅ Resumen Día requiere rango
+    if (this.modo !== 'rango') {
+      return this.swalError('Para "Resumen por día" debe seleccionar "Por rango".');
+    }
+    if (!this.desde || !this.hasta) {
+      return this.swalError('Debe seleccionar un rango de fechas (desde y hasta).');
+    }
+
+    this.zone.run(() => {
+      this.descargando = true;
+      this.cdr.markForCheck();
+    });
+
+    const url = this.reportes.buildResumenDiaExcelUrl({
+      desde: this.desde,
+      hasta: this.hasta,
+      usuarioId: this.usuarioId || undefined,
+      sedeId: this.sedeId || undefined,
+    });
+
+    this.descargarPorUrl(url, 'reporte_asistencias_resumen_dia.xlsx');
+}
 
   private async descargarPorUrl(url: string, filename: string) {
     try {

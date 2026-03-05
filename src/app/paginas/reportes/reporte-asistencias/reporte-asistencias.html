@@ -101,5 +101,9 @@
     <button class="btn btn-sec" (click)="descargarPdf()" [disabled]="descargando">
       {{ descargando ? 'Generando...' : 'Descargar PDF' }}
     </button>
+      <!-- ✅ NUEVO: Resumen por día (Excel) -->
+      <button class="btn btn-sec" (click)="descargarResumenDiaExcel()" [disabled]="descargando">
+        {{ descargando ? 'Generando...' : 'Resumen Día (Excel)' }}
+      </button>
   </div>
 </div>

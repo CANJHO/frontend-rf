@@ -73,5 +73,19 @@ export class ServicioReportes {
 
   return `${this.base}/detalle-pdf?${q.toString()}`;
 }
+// ✅ NUEVO: Resumen por día (Excel) — requiere rango desde/hasta
+buildResumenDiaExcelUrl(params: {
+  desde: string;
+  hasta: string;
+  usuarioId?: string;
+  sedeId?: string;
+}) {
+  const qs = new URLSearchParams();
+  qs.set('desde', params.desde);
+  qs.set('hasta', params.hasta);
+  if (params.usuarioId) qs.set('usuarioId', params.usuarioId);
+  if (params.sedeId) qs.set('sedeId', params.sedeId);
+  return `${this.base}/resumen-dia-excel?${qs.toString()}`;
+}
 
 }
