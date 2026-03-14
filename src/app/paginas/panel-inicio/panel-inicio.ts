@@ -47,15 +47,21 @@ export class PanelInicioComponent implements OnInit {
     this.errorCarga = false;
     this.resumen = null;
 
-    // 🔥 Traemos TODOS los empleados (si tu org crece, luego lo optimizamos)
     this.empleadosSvc
       .listar(1, 10000, undefined)
       .pipe(finalize(() => (this.cargando = false)))
       .subscribe({
         next: (resp) => {
-          const empleados = (resp?.datos || []).filter((e: any) => {
-            const activo = e?.activo === true;
+          const empleadosRaw = resp?.datos || [];
+
+          const empleados = empleadosRaw.filter((e: any) => {
+            const activo =
+              e?.activo === true ||
+              e?.activo === 1 ||
+              String(e?.activo).toLowerCase() === 'true';
+
             const dni = String(e?.numero_documento || '').trim();
+
             return activo && dni !== '44823948';
           });
 
@@ -69,14 +75,15 @@ export class PanelInicioComponent implements OnInit {
           }
 
           this.asistenciasAdmin.resumenDia(this.fecha, ids).subscribe({
-            next: (r) => (this.resumen = r),
+            next: (r) => {
+              this.resumen = r;
+            },
             error: () => {
               this.errorCarga = true;
               this.resumen = null;
             },
           });
         },
-
         error: () => {
           this.errorCarga = true;
           this.totalEmpleados = 0;
@@ -85,10 +92,9 @@ export class PanelInicioComponent implements OnInit {
       });
   }
 
-  // Helpers UI
   horaDe(fechaHora: string | null | undefined): string {
     if (!fechaHora) return '-';
-    // viene como timestamp; mostramos HH:mm:ss
+
     try {
       const d = new Date(fechaHora);
       const hh = String(d.getHours()).padStart(2, '0');
