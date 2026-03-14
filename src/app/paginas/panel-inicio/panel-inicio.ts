@@ -53,7 +53,12 @@ export class PanelInicioComponent implements OnInit {
       .pipe(finalize(() => (this.cargando = false)))
       .subscribe({
         next: (resp) => {
-          const empleados = resp?.datos || [];
+          const empleados = (resp?.datos || []).filter((e: any) => {
+            const activo = e?.activo === true;
+            const dni = String(e?.numero_documento || '').trim();
+            return activo && dni !== '44823948';
+          });
+
           const ids = empleados.map((e: any) => e?.id).filter(Boolean);
 
           this.totalEmpleados = ids.length;
@@ -71,6 +76,7 @@ export class PanelInicioComponent implements OnInit {
             },
           });
         },
+
         error: () => {
           this.errorCarga = true;
           this.totalEmpleados = 0;
