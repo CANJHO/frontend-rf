@@ -17,6 +17,8 @@ import {
   styleUrls: ['./panel-inicio.scss'],
 })
 export class PanelInicioComponent implements OnInit {
+  private readonly dniExcluido = '44823948';
+
   fecha: string = this.hoyISO();
 
   cargando = false;
@@ -53,17 +55,9 @@ export class PanelInicioComponent implements OnInit {
       .subscribe({
         next: (resp) => {
           const empleadosRaw = resp?.datos || [];
-
-          const empleados = empleadosRaw.filter((e: any) => {
-            const activo =
-              e?.activo === true ||
-              e?.activo === 1 ||
-              String(e?.activo).toLowerCase() === 'true';
-
-            const dni = String(e?.numero_documento || '').trim();
-
-            return activo && dni !== '44823948';
-          });
+          const empleados = empleadosRaw.filter((e: any) =>
+            this.esEmpleadoVisible(e),
+          );
 
           const ids = empleados.map((e: any) => e?.id).filter(Boolean);
 
@@ -76,7 +70,7 @@ export class PanelInicioComponent implements OnInit {
 
           this.asistenciasAdmin.resumenDia(this.fecha, ids).subscribe({
             next: (r) => {
-              this.resumen = r;
+              this.resumen = this.normalizarResumen(r, ids);
             },
             error: () => {
               this.errorCarga = true;
@@ -104,6 +98,46 @@ export class PanelInicioComponent implements OnInit {
     } catch {
       return '-';
     }
+  }
+
+  private esEmpleadoVisible(empleado: any): boolean {
+    const activo =
+      empleado?.activo === true ||
+      empleado?.activo === 1 ||
+      String(empleado?.activo).toLowerCase() === 'true';
+
+    const dni = String(empleado?.numero_documento || '').trim();
+
+    return activo && dni !== this.dniExcluido;
+  }
+
+  private normalizarResumen(
+    resumen: ResumenDiaResponse,
+    idsVisibles: string[],
+  ): ResumenDiaResponse {
+    const idsPermitidos = new Set(idsVisibles.map((id) => String(id)));
+
+    const ingresos = (resumen?.ingresos || []).filter((row) =>
+      idsPermitidos.has(String(row?.usuario_id)),
+    );
+
+    const topTardanzas = (resumen?.top_tardanzas || []).filter((row) =>
+      idsPermitidos.has(String(row?.usuario_id)),
+    );
+
+    const marcaronIngreso = new Set(
+      ingresos.map((row) => String(row?.usuario_id)).filter(Boolean),
+    ).size;
+
+    return {
+      ...resumen,
+      total_empleados: idsVisibles.length,
+      marcaron_ingreso: marcaronIngreso,
+      no_marcaron_ingreso: Math.max(idsVisibles.length - marcaronIngreso, 0),
+      tardanzas: topTardanzas.length,
+      ingresos,
+      top_tardanzas: topTardanzas,
+    };
   }
 
   tardanzaLabel(mins: number | null | undefined): string {

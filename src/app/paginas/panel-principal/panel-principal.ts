@@ -3,7 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ServicioAutenticacion } from '../../nucleo/servicios/servicio-autenticacion';
 import Swal from 'sweetalert2';
-import { ServicioEmpleados, CumpleanosProximoRow } from '../../nucleo/servicios/servicio-empleados';
+import {
+  ServicioEmpleados,
+  CumpleanosProximoRow,
+} from '../../nucleo/servicios/servicio-empleados';
 import { firstValueFrom } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 
@@ -24,7 +27,7 @@ export class PanelPrincipalComponent implements OnInit {
   // dropdown perfil
   userMenuOpen = false;
 
-  // ✅ drawer móvil
+  // drawer móvil
   sidebarOpen = false;
 
   constructor(
@@ -47,7 +50,7 @@ export class PanelPrincipalComponent implements OnInit {
   }
 
   /* ==========================
-     ✅ Drawer móvil
+     Drawer móvil
   ========================== */
 
   toggleSidebar() {
@@ -125,26 +128,53 @@ export class PanelPrincipalComponent implements OnInit {
         return;
       }
 
-      const fmt = (iso: string) => {
-        const [y, m, d] = (iso || '').split('-');
-        return (y && m && d) ? `${d}/${m}/${y}` : iso;
+      const fmtFecha = (valor: string) => {
+        const limpio = String(valor || '').trim();
+        if (!limpio) return '-';
+
+        const soloFecha = limpio.includes('T') ? limpio.slice(0, 10) : limpio;
+        const [y, m, d] = soloFecha.split('-');
+        if (!y || !m || !d) return limpio;
+
+        const fecha = new Date(`${soloFecha}T00:00:00`);
+        if (Number.isNaN(fecha.getTime())) return limpio;
+
+        return fecha.toLocaleDateString('es-PE', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        });
+      };
+
+      const etiquetaFecha = (valor: string, diasFaltan: number) => {
+        if (diasFaltan === 0) return 'Hoy';
+        if (diasFaltan === 1) return 'Mañana';
+        return fmtFecha(valor);
+      };
+
+      const etiquetaTiempo = (diasFaltan: number) => {
+        if (diasFaltan === 0) return 'Es hoy';
+        if (diasFaltan === 1) return 'Falta 1 día';
+        return `Faltan ${diasFaltan} días`;
       };
 
       const html = `
-        <div style="text-align:left; line-height:1.4;">
-          <div style="margin-bottom:8px; color:#cfcfcf;">
-            Cumpleaños próximos (en los siguientes 5 días):
+        <div style="text-align:left; line-height:1.45;">
+          <div style="margin-bottom:10px; color:#cfcfcf;">
+            Cumpleaños próximos en los siguientes 5 días:
           </div>
           <ul style="padding-left:18px; margin:0;">
             ${lista.map((r) => {
-              const nombre = `${r.nombre} ${r.apellido_paterno || ''} ${r.apellido_materno || ''}`.trim();
+              const nombre =
+                `${r.nombre} ${r.apellido_paterno || ''} ${r.apellido_materno || ''}`.trim();
               const faltan = Number(r.dias_faltan || 0);
-              const labelFaltan = (faltan === 0) ? 'HOY' : `Faltan ${faltan} día(s)`;
+              const fechaBonita = etiquetaFecha(r.proximo_cumple, faltan);
+              const labelFaltan = etiquetaTiempo(faltan);
               return `
-                <li style="margin:6px 0;">
+                <li style="margin:8px 0;">
                   <strong>${nombre}</strong><br/>
-                  <span style="color:#d4af37;">${fmt(r.proximo_cumple)}</span>
-                  <span style="color:#9a9a9a;"> — ${labelFaltan}</span>
+                  <span style="color:#d4af37;">${fechaBonita}</span>
+                  <span style="color:#9a9a9a;"> - ${labelFaltan}</span>
                 </li>
               `;
             }).join('')}
