@@ -19,6 +19,8 @@ interface DiaHorarioUI {
   tolerancia_min: number;
 }
 
+type TipoExcepcion = 'HORARIO_ESPECIAL' | 'DESCANSO_ESPECIAL' | 'LABORABLE_EN_DESCANSO';
+
 @Component({
   selector: 'app-empleado-horario',
   standalone: true,
@@ -27,6 +29,12 @@ interface DiaHorarioUI {
   styleUrls: ['./empleado-horario.scss'],
 })
 export class EmpleadoHorarioComponent implements OnInit {
+  readonly tiposExcepcion: Array<{ value: TipoExcepcion; label: string }> = [
+    { value: 'HORARIO_ESPECIAL', label: 'Horario especial' },
+    { value: 'DESCANSO_ESPECIAL', label: 'Descanso especial' },
+    { value: 'LABORABLE_EN_DESCANSO', label: 'Laborable en día de descanso' },
+  ];
+
   empleadoId!: string;
   empleadoResumen: any | null = null;
 
@@ -59,7 +67,7 @@ export class EmpleadoHorarioComponent implements OnInit {
   // ==========================
   // EXCEPCIONES (UI)
   // ==========================
-  exTipo: string = 'Horario especial';
+  exTipo: TipoExcepcion = 'HORARIO_ESPECIAL';
   exEsLaborable: boolean = true;
   exHoraInicio: string | null = null;
   exHoraFin: string | null = null;
@@ -127,6 +135,18 @@ export class EmpleadoHorarioComponent implements OnInit {
   private cleanTimeForApi(v: string | null): string | null {
     const t = this.toHHmm(v);
     return t ? t : null;
+  }
+
+  get exTipoLabel(): string {
+    return this.tiposExcepcion.find((item) => item.value === this.exTipo)?.label || this.exTipo;
+  }
+
+  private normalizarTipoExcepcion(tipo: any): TipoExcepcion {
+    const valor = String(tipo || '').trim().toUpperCase();
+    return (
+      this.tiposExcepcion.find((item) => item.value === valor)?.value ||
+      'HORARIO_ESPECIAL'
+    );
   }
 
   private inicializarSemana() {
@@ -374,13 +394,13 @@ export class EmpleadoHorarioComponent implements OnInit {
           this.exActual = ex ? { ...ex } : null;
 
           if (this.exActual) {
-            this.exTipo = this.exActual.tipo || 'Horario especial';
+            this.exTipo = this.normalizarTipoExcepcion(this.exActual.tipo);
             this.exEsLaborable = !!this.exActual.es_laborable;
             this.exHoraInicio = this.toHHmm(this.exActual.hora_inicio);
             this.exHoraFin = this.toHHmm(this.exActual.hora_fin);
             this.exObservacion = this.exActual.observacion || '';
           } else {
-            this.exTipo = 'Horario especial';
+            this.exTipo = 'HORARIO_ESPECIAL';
             this.exEsLaborable = true;
             this.exHoraInicio = null;
             this.exHoraFin = null;
