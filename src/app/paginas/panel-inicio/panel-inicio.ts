@@ -32,7 +32,8 @@ interface ActividadFila {
   refrigerio_out: string | null;
   refrigerio_in: string | null;
   jornada_out: string | null;
-  minutos_tarde: number;
+  minutos_tarde_ingreso: number;
+  minutos_tarde_refrigerio: number;
   estado: EstadoActividad;
 }
 
@@ -219,7 +220,11 @@ export class PanelInicioComponent implements OnInit, AfterViewInit {
       total_empleados: actividad.length,
       marcaron_ingreso: actividad.filter((row) => !!row.jornada_in).length,
       no_marcaron_ingreso: actividad.filter((row) => !row.jornada_in).length,
-      tardanzas: actividad.filter((row) => row.minutos_tarde > 0).length,
+      tardanzas: actividad.filter(
+        (row) =>
+          Number(row.minutos_tarde_ingreso || 0) > 0 ||
+          Number(row.minutos_tarde_refrigerio || 0) > 0,
+      ).length,
       pendientes: empleadosFiltrados.filter((empleado) => !!this.pendientesMap[String(empleado.id)]).length,
     };
   }
@@ -254,7 +259,8 @@ export class PanelInicioComponent implements OnInit, AfterViewInit {
       refrigerio_out: this.horaDe(refrigerioOutRow?.fecha_hora),
       refrigerio_in: this.horaDe(refrigerioInRow?.fecha_hora),
       jornada_out: this.horaDe(jornadaOutRow?.fecha_hora),
-      minutos_tarde: Number(jornadaInRow?.minutos_tarde || 0),
+      minutos_tarde_ingreso: Number(jornadaInRow?.minutos_tarde || 0),
+      minutos_tarde_refrigerio: Number(refrigerioInRow?.minutos_tarde || 0),
       estado,
     };
   }
@@ -308,7 +314,14 @@ export class PanelInicioComponent implements OnInit, AfterViewInit {
 
   maxTardanza(): number {
     if (!this.actividad.length) return 0;
-    return Math.max(...this.actividad.map((row) => Number(row.minutos_tarde || 0)));
+    return Math.max(
+      ...this.actividad.map((row) =>
+        Math.max(
+          Number(row.minutos_tarde_ingreso || 0),
+          Number(row.minutos_tarde_refrigerio || 0),
+        ),
+      ),
+    );
   }
 
   porcentajeTexto(valor: number, total: number): string {
@@ -366,6 +379,14 @@ export class PanelInicioComponent implements OnInit, AfterViewInit {
       default:
         return 'estado-badge--muted';
     }
+  }
+
+  eventoTarde(tipo: 'ingreso' | 'refrigerio', row: ActividadFila): boolean {
+    if (tipo === 'ingreso') {
+      return Number(row.minutos_tarde_ingreso || 0) > 0;
+    }
+
+    return Number(row.minutos_tarde_refrigerio || 0) > 0;
   }
 
   scrollActividad(direction: 'left' | 'right'): void {

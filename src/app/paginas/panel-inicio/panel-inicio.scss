@@ -832,6 +832,11 @@
   color: var(--text-primary);
 }
 
+.col-evento--late {
+  color: var(--danger);
+  font-weight: 900;
+}
+
 .col-evento .punto {
   display: inline-block;
   width: 10px;
@@ -840,6 +845,11 @@
   border-radius: 50%;
   background: #d1d5db;
   vertical-align: middle;
+}
+
+.col-evento--late .punto {
+  background: var(--danger);
+  box-shadow: 0 0 0 4px rgba(214, 69, 69, 0.12);
 }
 
 .col-evento--in .punto {

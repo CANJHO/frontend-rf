@@ -239,7 +239,7 @@
                     </div>
                   </div>
                 </td>
-                <td class="col-evento col-evento--in">
+                <td class="col-evento col-evento--in" [class.col-evento--late]="eventoTarde('ingreso', row)">
                   <span class="punto"></span>
                   {{ formatoHoraVisible(row.jornada_in) }}
                 </td>
@@ -247,7 +247,7 @@
                   <span class="punto"></span>
                   {{ formatoHoraVisible(row.refrigerio_out) }}
                 </td>
-                <td class="col-evento col-evento--return">
+                <td class="col-evento col-evento--return" [class.col-evento--late]="eventoTarde('refrigerio', row)">
                   <span class="punto"></span>
                   {{ formatoHoraVisible(row.refrigerio_in) }}
                 </td>
