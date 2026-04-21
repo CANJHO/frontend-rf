@@ -3,7 +3,7 @@
     <div>
       <h2 class="titulo">Inicio</h2>
       <p class="subtitulo">
-        Resumen de asistencia (todas las sedes) - Selecciona una fecha para ver el estado general.
+        Resumen general de asistencia con actividad del dia y control por sedes.
       </p>
     </div>
 
@@ -31,7 +31,7 @@
 
   <ng-container *ngIf="resumen">
     <div class="kpis">
-      <div class="kpi">
+      <div class="kpi kpi--hero">
         <div class="kpi__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24">
             <path
@@ -42,6 +42,12 @@
         <div class="kpi__meta">
           <div class="kpi__value">{{ resumen.total_empleados }}</div>
           <div class="kpi__label">Total empleados</div>
+          <div class="kpi__hint">100% del total</div>
+        </div>
+        <div class="kpi__spark" aria-hidden="true">
+          <svg viewBox="0 0 120 48" preserveAspectRatio="none">
+            <path d="M2 42 C18 38, 22 28, 34 30 S54 40, 63 27 S84 9, 94 16 S108 29, 118 4" />
+          </svg>
         </div>
       </div>
 
@@ -53,7 +59,10 @@
         </div>
         <div class="kpi__meta">
           <div class="kpi__value">{{ resumen.marcaron_ingreso }}</div>
-          <div class="kpi__label">Marcaron ingreso</div>
+          <div class="kpi__label">Ingresos</div>
+          <div class="kpi__hint">
+            {{ porcentajeTexto(resumen.marcaron_ingreso, resumen.total_empleados) }}
+          </div>
         </div>
       </div>
 
@@ -65,7 +74,10 @@
         </div>
         <div class="kpi__meta">
           <div class="kpi__value">{{ resumen.no_marcaron_ingreso }}</div>
-          <div class="kpi__label">No marcaron ingreso</div>
+          <div class="kpi__label">Sin ingreso</div>
+          <div class="kpi__hint">
+            {{ porcentajeTexto(resumen.no_marcaron_ingreso, resumen.total_empleados) }}
+          </div>
         </div>
       </div>
 
@@ -78,6 +90,7 @@
         <div class="kpi__meta">
           <div class="kpi__value">{{ resumen.tardanzas }}</div>
           <div class="kpi__label">Tardanzas</div>
+          <div class="kpi__hint">Control de puntualidad</div>
         </div>
       </div>
 
@@ -92,42 +105,159 @@
         <div class="kpi__meta">
           <div class="kpi__value">{{ resumen.pendientes }}</div>
           <div class="kpi__label">Pendientes</div>
+          <div class="kpi__hint">Dias por regularizar</div>
         </div>
       </div>
     </div>
 
     <div class="grid">
       <div class="card card--primary">
-        <div class="card__header">
+        <div class="card__header card__header--activity">
           <div>
             <div class="card__eyebrow">Actividad</div>
-            <div class="card__title">Ingresos del dia</div>
+            <div class="card__title">Actividad del dia</div>
           </div>
-          <div class="card__chip">{{ resumen.ingresos.length }} registros</div>
+
+          <div class="activity-filtros">
+            <label class="activity-control">
+              <span class="activity-control__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 15H5V9h14z" />
+                </svg>
+              </span>
+              <span class="activity-control__text">{{ fechaActividadLabel() }}</span>
+              <input type="date" [(ngModel)]="fecha" (change)="cargar()" />
+            </label>
+
+            <label class="activity-control activity-control--select">
+              <span class="activity-control__text">
+                {{ sedeSeleccionada || 'Todas las sedes' }}
+              </span>
+              <select [(ngModel)]="sedeSeleccionada" (ngModelChange)="onFiltrosActividadChange()">
+                <option value="">Todas las sedes</option>
+                <option *ngFor="let sede of sedesDisponibles" [ngValue]="sede">{{ sede }}</option>
+              </select>
+            </label>
+          </div>
         </div>
 
-        <div class="tabla-wrap" *ngIf="resumen.ingresos.length; else sinIngresos">
-          <table class="tabla">
+        <div class="activity-scrollbar" *ngIf="actividad.length">
+          <button type="button" class="scroll-btn" (click)="scrollActividad('left')" aria-label="Mover tabla a la izquierda">
+            <svg viewBox="0 0 24 24">
+              <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+            </svg>
+          </button>
+          <div class="activity-scrollbar__hint">Desliza la actividad horizontalmente</div>
+          <button type="button" class="scroll-btn" (click)="scrollActividad('right')" aria-label="Mover tabla a la derecha">
+            <svg viewBox="0 0 24 24">
+              <path d="m8.59 16.59 1.41 1.41 6-6-6-6-1.41 1.41L13.17 12z" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="tabla-wrap tabla-wrap--actividad" *ngIf="actividad.length; else sinActividad" #actividadScroller>
+          <table class="tabla tabla--actividad">
             <thead>
               <tr>
                 <th>Empleado</th>
-                <th>Documento</th>
-                <th>Hora ingreso</th>
-                <th>Tardanza</th>
+                <th>
+                  <div class="th-evento th-evento--in">
+                    <span class="th-evento__titulo">
+                      <span class="th-evento__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                          <path d="M12 2 5 9h4v8h6V9h4l-7-7zm-7 17h14v3H5z" />
+                        </svg>
+                      </span>
+                      <span>Ingreso</span>
+                    </span>
+                    <span class="th-evento__sub">Inicio de jornada</span>
+                  </div>
+                </th>
+                <th>
+                  <div class="th-evento th-evento--break">
+                    <span class="th-evento__titulo">
+                      <span class="th-evento__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                          <path d="M7 2h2v9a2 2 0 0 1-2 2V2zm4 0h2v9a2 2 0 0 1-2 2V2zm7 0h2v7a5 5 0 0 1-5 5h-1v8h-2V2h2v10h1a3 3 0 0 0 3-3V2zM4 15h4v7H4z" />
+                        </svg>
+                      </span>
+                      <span>Salida a refrigerio</span>
+                    </span>
+                    <span class="th-evento__sub">Inicio del break</span>
+                  </div>
+                </th>
+                <th>
+                  <div class="th-evento th-evento--return">
+                    <span class="th-evento__titulo">
+                      <span class="th-evento__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                          <path d="M12 6V3L8 7l4 4V8c2.76 0 5 2.24 5 5a5 5 0 1 1-8.66-3.46L6.92 8.12A7 7 0 1 0 19 13c0-3.87-3.13-7-7-7z" />
+                        </svg>
+                      </span>
+                      <span>Retorno de refrigerio</span>
+                    </span>
+                    <span class="th-evento__sub">Fin del break</span>
+                  </div>
+                </th>
+                <th>
+                  <div class="th-evento th-evento--out">
+                    <span class="th-evento__titulo">
+                      <span class="th-evento__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                          <path d="M10 17V7l-5 5 5 5zm2-14v3c3.87 0 7 3.13 7 7s-3.13 7-7 7v3c5.52 0 10-4.48 10-10S17.52 3 12 3z" />
+                        </svg>
+                      </span>
+                      <span>Salida final</span>
+                    </span>
+                    <span class="th-evento__sub">Fin de jornada</span>
+                  </div>
+                </th>
+                <th>Estado del dia</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let r of resumen.ingresos">
-                <td class="nombre">{{ r.nombre_completo }}</td>
-                <td>{{ r.numero_documento || '-' }}</td>
-                <td>{{ horaDe(r.fecha_hora_in) }}</td>
+              <tr *ngFor="let row of actividad">
                 <td>
-                  <span
-                    class="pill"
-                    [class.pill--ok]="(r.minutos_tarde || 0) <= 0"
-                    [class.pill--tarde]="(r.minutos_tarde || 0) > 0"
-                  >
-                    {{ tardanzaLabel(r.minutos_tarde) }}
+                  <div class="empleado-mini">
+                    <div
+                      class="empleado-mini__avatar"
+                      [class.empleado-mini__avatar--photo]="fotoEmpleado(row.usuario_id)"
+                    >
+                      <img
+                        *ngIf="fotoEmpleado(row.usuario_id); else avatarInicial"
+                        [src]="fotoEmpleado(row.usuario_id)!"
+                        [alt]="row.nombre_completo"
+                      />
+                      <ng-template #avatarInicial>
+                        {{ inicialesEmpleado(row.nombre_completo) }}
+                      </ng-template>
+                    </div>
+
+                    <div class="empleado-mini__meta">
+                      <div class="empleado-mini__nombre">{{ row.nombre_completo }}</div>
+                      <div class="empleado-mini__rol">{{ detalleEmpleado(row.usuario_id) }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="col-evento col-evento--in">
+                  <span class="punto"></span>
+                  {{ formatoHoraVisible(row.jornada_in) }}
+                </td>
+                <td class="col-evento col-evento--break">
+                  <span class="punto"></span>
+                  {{ formatoHoraVisible(row.refrigerio_out) }}
+                </td>
+                <td class="col-evento col-evento--return">
+                  <span class="punto"></span>
+                  {{ formatoHoraVisible(row.refrigerio_in) }}
+                </td>
+                <td class="col-evento col-evento--out">
+                  <span class="punto"></span>
+                  {{ formatoHoraVisible(row.jornada_out) }}
+                </td>
+                <td>
+                  <span class="estado-badge" [ngClass]="estadoClase(row.estado)">
+                    {{ row.estado }}
                   </span>
                 </td>
               </tr>
@@ -135,8 +265,14 @@
           </table>
         </div>
 
-        <ng-template #sinIngresos>
-          <div class="vacio">Nadie registro ingreso en esta fecha.</div>
+        <div class="card__footer">
+          <a class="btn-secondary" routerLink="/panel/empleados/asistencias">
+            Ver toda la actividad
+          </a>
+        </div>
+
+        <ng-template #sinActividad>
+          <div class="vacio">No hay empleados para mostrar con los filtros seleccionados.</div>
         </ng-template>
       </div>
 

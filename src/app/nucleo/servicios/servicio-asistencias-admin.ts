@@ -17,6 +17,14 @@ export interface AsistenciaRow {
   minutos_tarde?: number | null;
 }
 
+export interface AsistenciaAdminListadoRow extends AsistenciaRow {
+  nombre?: string;
+  apellido_paterno?: string | null;
+  apellido_materno?: string | null;
+  numero_documento?: string | null;
+  nombre_completo?: string;
+}
+
 export interface EmpleadoCabecera {
   id: string;
   nombre: string;
@@ -78,6 +86,18 @@ export class ServicioAsistenciasAdmin {
     return this.http.get<TimelineResponse>(
       `${this.urlBaseAdmin}/timeline`,
       { params: { usuarioId, fecha } },
+    );
+  }
+
+  listar(params?: {
+    usuarioId?: string;
+    desde?: string;
+    hasta?: string;
+    estado?: string;
+  }): Observable<AsistenciaAdminListadoRow[]> {
+    return this.http.get<AsistenciaAdminListadoRow[]>(
+      `${this.urlBaseAdmin}`,
+      { params: { ...(params || {}) } },
     );
   }
 
