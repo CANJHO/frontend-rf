@@ -37,6 +37,12 @@ interface ActividadFila {
   estado: EstadoActividad;
 }
 
+interface TardanzaDestacada {
+  nombre: string;
+  detalle: string;
+  minutos: number;
+}
+
 @Component({
   selector: 'app-panel-inicio',
   standalone: true,
@@ -322,6 +328,33 @@ export class PanelInicioComponent implements OnInit, AfterViewInit {
         ),
       ),
     );
+  }
+
+  tardanzasDestacadas(): TardanzaDestacada[] {
+    return this.actividad
+      .flatMap((row) => {
+        const items: TardanzaDestacada[] = [];
+
+        if (Number(row.minutos_tarde_ingreso || 0) > 0) {
+          items.push({
+            nombre: row.nombre_completo,
+            detalle: `Ingreso ${row.jornada_in || '-'}`,
+            minutos: Number(row.minutos_tarde_ingreso || 0),
+          });
+        }
+
+        if (Number(row.minutos_tarde_refrigerio || 0) > 0) {
+          items.push({
+            nombre: row.nombre_completo,
+            detalle: `Retorno ${row.refrigerio_in || '-'}`,
+            minutos: Number(row.minutos_tarde_refrigerio || 0),
+          });
+        }
+
+        return items;
+      })
+      .sort((a, b) => b.minutos - a.minutos)
+      .slice(0, 4);
   }
 
   porcentajeTexto(valor: number, total: number): string {

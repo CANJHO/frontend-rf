@@ -147,7 +147,6 @@
               <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
             </svg>
           </button>
-          <div class="activity-scrollbar__hint">Desliza la actividad horizontalmente</div>
           <button type="button" class="scroll-btn" (click)="scrollActividad('right')" aria-label="Mover tabla a la derecha">
             <svg viewBox="0 0 24 24">
               <path d="m8.59 16.59 1.41 1.41 6-6-6-6-1.41 1.41L13.17 12z" />
@@ -239,7 +238,7 @@
                     </div>
                   </div>
                 </td>
-                <td class="col-evento col-evento--in" [class.col-evento--late]="eventoTarde('ingreso', row)">
+                <td class="col-evento col-evento--in">
                   <span class="punto"></span>
                   {{ formatoHoraVisible(row.jornada_in) }}
                 </td>
@@ -247,7 +246,7 @@
                   <span class="punto"></span>
                   {{ formatoHoraVisible(row.refrigerio_out) }}
                 </td>
-                <td class="col-evento col-evento--return" [class.col-evento--late]="eventoTarde('refrigerio', row)">
+                <td class="col-evento col-evento--return">
                   <span class="punto"></span>
                   {{ formatoHoraVisible(row.refrigerio_in) }}
                 </td>
@@ -304,9 +303,18 @@
             </div>
             <div class="mini-card__title">Tardanzas</div>
           </div>
-          <div class="mini-card__value">{{ resumen.tardanzas }}</div>
+          <div class="mini-card__value mini-card__value--compact">{{ resumen.tardanzas }}</div>
           <div class="mini-card__meta" *ngIf="resumen.tardanzas; else sinTardanzaMeta">
             Maxima de {{ maxTardanza() }} min
+          </div>
+          <div class="tardanza-list" *ngIf="tardanzasDestacadas().length">
+            <div class="tardanza-item" *ngFor="let item of tardanzasDestacadas()">
+              <div class="tardanza-item__meta">
+                <div class="tardanza-item__nombre">{{ item.nombre }}</div>
+                <div class="tardanza-item__detalle">{{ item.detalle }}</div>
+              </div>
+              <div class="tardanza-item__min">{{ item.minutos }} min</div>
+            </div>
           </div>
           <ng-template #sinTardanzaMeta>
             <div class="mini-card__meta">Sin tardanzas hoy</div>
