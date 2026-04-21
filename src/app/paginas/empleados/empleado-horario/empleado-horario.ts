@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
-import Swal from 'sweetalert2';
+import Swal from '../../../nucleo/servicios/alerta-tema';
 
 import { ServicioHorarios } from '../../../nucleo/servicios/servicio-horarios';
 import { ServicioEmpleados } from '../../../nucleo/servicios/servicio-empleados';
@@ -194,8 +194,6 @@ export class EmpleadoHorarioComponent implements OnInit {
             icon: 'error',
             title: 'Error',
             text: 'No se pudo cargar el horario vigente.',
-            background: '#111',
-            color: '#f5f5f5',
           });
         },
       });
@@ -287,11 +285,9 @@ export class EmpleadoHorarioComponent implements OnInit {
       Swal.fire({
         icon: 'warning',
         title: 'Revisa el horario',
-        html: `<ul style="text-align:left; margin:0; padding-left:1.2rem; font-size:0.9rem;">
-          ${errores.map((e) => `<li>${e}</li>`).join('')}
+        html: `<ul class="app-swal-copy__list">
+          ${errores.map((e) => `<li class="app-swal-copy__item">${e}</li>`).join('')}
         </ul>`,
-        background: '#111',
-        color: '#f5f5f5',
       });
       return;
     }
@@ -320,8 +316,6 @@ export class EmpleadoHorarioComponent implements OnInit {
             icon: 'success',
             title: 'Horario guardado',
             text: 'La nueva semana de horario se guardó correctamente.',
-            background: '#111',
-            color: '#f5f5f5',
           });
 
           this.cargarHorarioVigente();
@@ -332,8 +326,6 @@ export class EmpleadoHorarioComponent implements OnInit {
             icon: 'error',
             title: 'No se pudo guardar',
             text: 'Ocurrió un error al guardar el horario. Intenta nuevamente.',
-            background: '#111',
-            color: '#f5f5f5',
           });
         },
       });
@@ -366,8 +358,6 @@ export class EmpleadoHorarioComponent implements OnInit {
             icon: 'error',
             title: 'No se pudo cargar el historial',
             text: 'Ocurrió un error al obtener el historial de horarios.',
-            background: '#111',
-            color: '#f5f5f5',
           });
         },
       });
@@ -424,8 +414,6 @@ export class EmpleadoHorarioComponent implements OnInit {
         icon: 'warning',
         title: 'Ya existe excepción',
         text: 'Para esta fecha ya hay una excepción registrada. Elimínala primero si deseas volver a crearla.',
-        background: '#111',
-        color: '#f5f5f5',
       });
       return;
     }
@@ -435,8 +423,6 @@ export class EmpleadoHorarioComponent implements OnInit {
         icon: 'warning',
         title: 'Fecha requerida',
         text: 'Selecciona la fecha de la excepción.',
-        background: '#111',
-        color: '#f5f5f5',
       });
       return;
     }
@@ -447,8 +433,6 @@ export class EmpleadoHorarioComponent implements OnInit {
           icon: 'warning',
           title: 'Horario incompleto',
           text: 'Completa la hora de inicio y fin de la excepción o deja ambas en blanco.',
-          background: '#111',
-          color: '#f5f5f5',
         });
         return;
       }
@@ -458,8 +442,6 @@ export class EmpleadoHorarioComponent implements OnInit {
           icon: 'warning',
           title: 'Horario inválido',
           text: 'La hora de inicio debe ser menor que la hora de fin.',
-          background: '#111',
-          color: '#f5f5f5',
         });
         return;
       }
@@ -485,8 +467,6 @@ export class EmpleadoHorarioComponent implements OnInit {
             icon: 'success',
             title: 'Excepción guardada',
             text: 'La excepción de horario se registró correctamente.',
-            background: '#111',
-            color: '#f5f5f5',
           });
 
           this.exActual = null;
@@ -499,8 +479,6 @@ export class EmpleadoHorarioComponent implements OnInit {
             icon: 'error',
             title: 'No se pudo guardar',
             text: err?.error?.message || 'Ocurrió un error al guardar la excepción.',
-            background: '#111',
-            color: '#f5f5f5',
           });
         },
       });
@@ -516,8 +494,6 @@ export class EmpleadoHorarioComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
-      background: '#111',
-      color: '#f5f5f5',
     }).then((res) => {
       if (!res.isConfirmed) return;
 
@@ -532,8 +508,6 @@ export class EmpleadoHorarioComponent implements OnInit {
               icon: 'success',
               title: 'Excepción eliminada',
               text: 'La excepción fue eliminada correctamente.',
-              background: '#111',
-              color: '#f5f5f5',
             });
             this.exActual = null;
             this.cargarExcepcionDelDia();
@@ -544,8 +518,6 @@ export class EmpleadoHorarioComponent implements OnInit {
               icon: 'error',
               title: 'No se pudo eliminar',
               text: 'Ocurrió un error al eliminar la excepción.',
-              background: '#111',
-              color: '#f5f5f5',
             });
           },
         });

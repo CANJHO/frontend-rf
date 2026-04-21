@@ -69,6 +69,16 @@ export class AsistenciasBandejaComponent implements OnInit {
     return Math.max(1, Math.ceil(this.totalRegistros / this.tamanoPagina));
   }
 
+  get rangoInicio(): number {
+    if (!this.totalRegistros) return 0;
+    return (this.paginaActual - 1) * this.tamanoPagina + 1;
+  }
+
+  get rangoFin(): number {
+    if (!this.totalRegistros) return 0;
+    return Math.min(this.paginaActual * this.tamanoPagina, this.totalRegistros);
+  }
+
   cargarEmpleados(pagina: number): void {
     this.cargando = true;
     this.errorCarga = false;

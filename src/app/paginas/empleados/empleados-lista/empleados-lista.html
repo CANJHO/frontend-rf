@@ -1,172 +1,194 @@
-<div class="contenedor-usuarios">
-  <div class="cabecera">
-    <h2 class="titulo">Listado de Empleados</h2>
+<div class="empleados">
+  <div class="empleados__hero">
+    <div>
+      <div class="empleados__eyebrow">Gestion</div>
+      <h2 class="empleados__titulo">Listado de empleados</h2>
+      <p class="empleados__subtitulo">
+        Consulta la base de empleados, revisa cumpleanos y accede al detalle de horarios.
+      </p>
+    </div>
+  </div>
 
-    <div class="buscador">
+  <div class="empleados__toolbar">
+    <div class="busqueda-card">
+      <div class="busqueda-card__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M10 2a8 8 0 1 0 5.29 14l4.35 4.35 1.41-1.41L16.7 14.6A8 8 0 0 0 10 2zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12z"
+          />
+        </svg>
+      </div>
+
       <input
         type="text"
         [(ngModel)]="terminoBusqueda"
         (keyup.enter)="ejecutarBusqueda()"
-        placeholder="Buscar por nombre o documento..."
-        class="buscador__input"
+        placeholder="Buscar por nombre o documento"
+        class="busqueda-card__input"
       />
 
       <button
         type="button"
-        class="boton-accion buscador__boton"
-        (click)="ejecutarBusqueda()"
-      >
+        class="btn btn--ghost"
+        (click)="ejecutarBusqueda()">
         Buscar
       </button>
     </div>
   </div>
 
-  <br />
-
-  <div *ngIf="cargando" class="cargando">
+  <div *ngIf="cargando" class="estado estado--loading">
     Cargando empleados...
   </div>
 
-  <div *ngIf="!cargando && errorCarga" class="mensaje-error">
-    Ocurrió un error al cargar los empleados.
-    <button type="button" (click)="cargarEmpleados(1)">Reintentar</button>
+  <div *ngIf="!cargando && errorCarga" class="estado estado--error">
+    Ocurrio un error al cargar los empleados.
+    <button type="button" class="btn-link" (click)="cargarEmpleados(1)">Reintentar</button>
   </div>
 
   <ng-container *ngIf="!cargando && !errorCarga">
-    <table
-      *ngIf="empleados.length > 0; else sinEmpleados"
-      class="tabla-usuarios"
-    >
-      <thead>
-        <tr>
-          <th>Nombre completo</th>
-          <th>Documento</th>
-          <th>Tipo</th>
-          <th>Rol</th>
-          <th>Sede</th>
-          <th>Área</th>
-          <th>Estado</th>
-          <th>Cumpleaños</th>
-          <th>Código escaneable</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr *ngFor="let e of empleados" style="cursor: pointer;">
-          <td>
-            <a
-              [routerLink]="['/panel/empleados', e.id]"
-              style="display: block; color: inherit; text-decoration: none;"
-            >
-              {{ e.nombre }} {{ e.apellido_paterno }} {{ e.apellido_materno }}
-            </a>
-          </td>
-          <td>{{ e.numero_documento }}</td>
-          <td>{{ e.tipo_documento }}</td>
-          <td>{{ e.rol }}</td>
-          <td>{{ e.sede || '-' }}</td>
-          <td>{{ e.area || '-' }}</td>
-          <td>
-            <span
-              class="estado"
-              [class.activo]="e.activo"
-              [class.inactivo]="!e.activo"
-            >
-              {{ e.activo ? 'Activo' : 'Inactivo' }}
-            </span>
-          </td>
-
-          <!-- ✅ NUEVO: Cumpleaños -->
-          <td>
-            <ng-container *ngIf="badgeCumple(e.fecha_nacimiento) as b; else sinCumple">
-              <span class="bday-badge"  [ngClass]="b.cls">
-                {{ b.text }}
-              </span>
-            </ng-container>
-            <ng-template #sinCumple>
-              <span class="bday-vacio">-</span>
-            </ng-template>
-          </td>
-
-          <td>{{ e.code_scannable }}</td>
-
-          <td class="acciones">
-            <button
-              class="btn-accion btn-editar"
-              [routerLink]="['/panel/empleados', e.id, 'horario']"
-            >
-              Editar horario
-            </button>
-
-            <button
-              class="btn-accion btn-descargar"
-              (click)="descargarHorario(e)"
-              [disabled]="descargandoId === e.id"
-            >
-              {{ descargandoId === e.id ? 'Generando...' : 'Descargar horario' }}
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="paginacion" *ngIf="empleados.length > 0">
-      <div class="paginacion__left">
-        <div class="paginacion__info">
-          Mostrando registros del
-          {{ (paginaActual - 1) * tamanoPagina + 1 }}
-          al
-          {{
-            (paginaActual * tamanoPagina) > totalRegistros
-              ? totalRegistros
-              : (paginaActual * tamanoPagina)
-          }}
-          de un total de {{ totalRegistros }} registros
+    <div class="empleados-card" *ngIf="empleados.length > 0; else sinEmpleados">
+      <div class="empleados-card__header">
+        <div>
+          <div class="empleados-card__title">Directorio general</div>
         </div>
-
-        <label>
-          Mostrar
-          <select
-            [ngModel]="tamanoPagina"
-            (ngModelChange)="cambiarTamanoPagina($event)"
-          >
-            <option *ngFor="let op of opcionesTamanoPagina" [ngValue]="op">
-              {{ op }}
-            </option>
-          </select>
-          registros
-        </label>
       </div>
 
-      <div class="paginacion__right">
-        <button
-          type="button"
-          class="boton-estado"
-          (click)="paginaAnterior()"
-          [disabled]="paginaActual === 1"
-        >
-          «
-        </button>
+      <div class="tabla-wrap">
+        <table class="tabla-empleados">
+          <thead>
+            <tr>
+              <th>Empleado</th>
+              <th>Documento</th>
+              <th>Tipo</th>
+              <th>Rol</th>
+              <th>Sede</th>
+              <th>Area</th>
+              <th>Estado</th>
+              <th>Cumpleanos</th>
+              <th>Codigo</th>
+              <th class="th-acciones">Acciones</th>
+            </tr>
+          </thead>
 
-        <span class="paginacion__pagina">
-          Página {{ paginaActual }} de {{ totalPaginas }}
-        </span>
+          <tbody>
+            <tr *ngFor="let e of empleados">
+              <td>
+                <a
+                  [routerLink]="['/panel/empleados', e.id]"
+                  class="empleado-link">
+                  <div class="empleado-cell">
+                    <div class="empleado-cell__avatar">
+                      {{ (e.nombre?.[0] || 'E') }}{{ (e.apellido_paterno?.[0] || '') }}
+                    </div>
+                    <div class="empleado-cell__meta">
+                      <div class="empleado-cell__nombre">
+                        {{ e.nombre }} {{ e.apellido_paterno }} {{ e.apellido_materno }}
+                      </div>
+                      <div class="empleado-cell__doc">{{ e.numero_documento }}</div>
+                    </div>
+                  </div>
+                </a>
+              </td>
+              <td>{{ e.numero_documento }}</td>
+              <td>{{ e.tipo_documento }}</td>
+              <td>{{ e.rol }}</td>
+              <td>{{ e.sede || '-' }}</td>
+              <td>{{ e.area || '-' }}</td>
+              <td>
+                <span
+                  class="badge-estado"
+                  [class.badge-estado--activo]="e.activo"
+                  [class.badge-estado--inactivo]="!e.activo">
+                  {{ e.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td>
+                <ng-container *ngIf="badgeCumple(e.fecha_nacimiento) as b; else sinCumple">
+                  <span class="bday-badge" [ngClass]="b.cls">
+                    {{ b.text }}
+                  </span>
+                </ng-container>
+                <ng-template #sinCumple>
+                  <span class="bday-vacio">-</span>
+                </ng-template>
+              </td>
+              <td>{{ e.code_scannable }}</td>
+              <td class="td-acciones">
+                <div class="acciones">
+                  <a
+                    class="accion-btn accion-btn--edit"
+                    [routerLink]="['/panel/empleados', e.id, 'horario']"
+                    aria-label="Editar horario">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm17.71-10.04a1.004 1.004 0 0 0 0-1.42l-2.5-2.5a1.004 1.004 0 0 0-1.42 0l-1.96 1.96 3.75 3.75 2.13-1.79z"
+                      />
+                    </svg>
+                  </a>
 
-        <button
-          type="button"
-          class="boton-estado"
-          (click)="paginaSiguiente()"
-          [disabled]="paginaActual === totalPaginas"
-        >
-          »
-        </button>
+                  <button
+                    type="button"
+                    class="accion-btn accion-btn--download"
+                    (click)="descargarHorario(e)"
+                    [disabled]="descargandoId === e.id"
+                    aria-label="Descargar horario">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M5 20h14v-2H5zm7-18v10.17l3.59-3.58L17 10l-5 5-5-5 1.41-1.41L11 12.17V2z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="paginacion">
+        <div class="paginacion__left">
+          <div class="paginacion__info">
+            Mostrando del {{ rangoInicio }} al {{ rangoFin }} de {{ totalRegistros }} registros
+          </div>
+
+          <label class="paginacion__label">
+            Mostrar
+            <select
+              [ngModel]="tamanoPagina"
+              (ngModelChange)="cambiarTamanoPagina($event)">
+              <option *ngFor="let op of opcionesTamanoPagina" [ngValue]="op">
+                {{ op }}
+              </option>
+            </select>
+            registros
+          </label>
+        </div>
+
+        <div class="paginacion__right">
+          <button
+            type="button"
+            class="btn-pagina"
+            (click)="paginaAnterior()"
+            [disabled]="paginaActual === 1">
+            Anterior
+          </button>
+
+          <span class="paginacion__pagina">Pagina {{ paginaActual }} de {{ totalPaginas }}</span>
+
+          <button
+            type="button"
+            class="btn-pagina"
+            (click)="paginaSiguiente()"
+            [disabled]="paginaActual === totalPaginas">
+            Siguiente
+          </button>
+        </div>
       </div>
     </div>
 
     <ng-template #sinEmpleados>
-      <div class="sin-registros">
-        No hay empleados que coincidan con la búsqueda.
+      <div class="estado estado--empty">
+        No hay empleados que coincidan con la busqueda.
       </div>
     </ng-template>
   </ng-container>

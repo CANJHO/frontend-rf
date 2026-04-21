@@ -3,7 +3,7 @@
     <div>
       <h2 class="titulo">Inicio</h2>
       <p class="subtitulo">
-        Resumen de asistencia (todas las sedes) — Selecciona una fecha para ver el estado general.
+        Resumen de asistencia (todas las sedes) - Selecciona una fecha para ver el estado general.
       </p>
     </div>
 
@@ -17,51 +17,94 @@
   </div>
 
   <div *ngIf="errorCarga" class="alerta-error">
-    Ocurrió un error al cargar el resumen.
+    Ocurrio un error al cargar el resumen.
     <button type="button" class="btn-link" (click)="cargar()">Reintentar</button>
   </div>
 
   <div *ngIf="!errorCarga && !cargando && !resumen" class="tarjeta-bienvenida">
     <h2>Bienvenido(a) al Panel</h2>
     <p>
-      Seleccione una opción del menú lateral para administrar usuarios, horarios,
+      Seleccione una opcion del menu lateral para administrar usuarios, horarios,
       asistencias o reportes.
     </p>
   </div>
 
   <ng-container *ngIf="resumen">
-    <!-- KPIs -->
     <div class="kpis">
       <div class="kpi">
-        <div class="kpi__label">Total empleados</div>
-        <div class="kpi__value">{{ resumen.total_empleados }}</div>
+        <div class="kpi__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.95 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
+            />
+          </svg>
+        </div>
+        <div class="kpi__meta">
+          <div class="kpi__value">{{ resumen.total_empleados }}</div>
+          <div class="kpi__label">Total empleados</div>
+        </div>
       </div>
 
       <div class="kpi kpi--ok">
-        <div class="kpi__label">Marcaron ingreso</div>
-        <div class="kpi__value">{{ resumen.marcaron_ingreso }}</div>
+        <div class="kpi__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M9 16.17 4.83 12 3.41 13.41 9 19l12-12-1.41-1.41z" />
+          </svg>
+        </div>
+        <div class="kpi__meta">
+          <div class="kpi__value">{{ resumen.marcaron_ingreso }}</div>
+          <div class="kpi__label">Marcaron ingreso</div>
+        </div>
       </div>
 
       <div class="kpi kpi--warn">
-        <div class="kpi__label">No marcaron ingreso</div>
-        <div class="kpi__value">{{ resumen.no_marcaron_ingreso }}</div>
+        <div class="kpi__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-2h2zm0-4h-2V7h2z" />
+          </svg>
+        </div>
+        <div class="kpi__meta">
+          <div class="kpi__value">{{ resumen.no_marcaron_ingreso }}</div>
+          <div class="kpi__label">No marcaron ingreso</div>
+        </div>
       </div>
 
       <div class="kpi kpi--warn2">
-        <div class="kpi__label">Tardanzas</div>
-        <div class="kpi__value">{{ resumen.tardanzas }}</div>
+        <div class="kpi__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 1a11 11 0 1 0 11 11A11 11 0 0 0 12 1zm1 11.41 3.29 3.3-1.41 1.41L11 13V6h2z" />
+          </svg>
+        </div>
+        <div class="kpi__meta">
+          <div class="kpi__value">{{ resumen.tardanzas }}</div>
+          <div class="kpi__label">Tardanzas</div>
+        </div>
       </div>
 
       <div class="kpi kpi--bad">
-        <div class="kpi__label">Pendientes</div>
-        <div class="kpi__value">{{ resumen.pendientes }}</div>
+        <div class="kpi__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M19 3H5a2 2 0 0 0-2 2v14l4-4h12a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-6 9H7v-2h6zm4-3H7V7h10z"
+            />
+          </svg>
+        </div>
+        <div class="kpi__meta">
+          <div class="kpi__value">{{ resumen.pendientes }}</div>
+          <div class="kpi__label">Pendientes</div>
+        </div>
       </div>
     </div>
 
-    <!-- Tablas -->
     <div class="grid">
-      <div class="card">
-        <div class="card__title">Ingresos del día</div>
+      <div class="card card--primary">
+        <div class="card__header">
+          <div>
+            <div class="card__eyebrow">Actividad</div>
+            <div class="card__title">Ingresos del dia</div>
+          </div>
+          <div class="card__chip">{{ resumen.ingresos.length }} registros</div>
+        </div>
 
         <div class="tabla-wrap" *ngIf="resumen.ingresos.length; else sinIngresos">
           <table class="tabla">
@@ -79,7 +122,11 @@
                 <td>{{ r.numero_documento || '-' }}</td>
                 <td>{{ horaDe(r.fecha_hora_in) }}</td>
                 <td>
-                  <span class="pill" [class.pill--tarde]="(r.minutos_tarde || 0) > 0">
+                  <span
+                    class="pill"
+                    [class.pill--ok]="(r.minutos_tarde || 0) <= 0"
+                    [class.pill--tarde]="(r.minutos_tarde || 0) > 0"
+                  >
                     {{ tardanzaLabel(r.minutos_tarde) }}
                   </span>
                 </td>
@@ -89,37 +136,64 @@
         </div>
 
         <ng-template #sinIngresos>
-          <div class="vacio">Nadie registró ingreso en esta fecha.</div>
+          <div class="vacio">Nadie registro ingreso en esta fecha.</div>
         </ng-template>
       </div>
 
-      <div class="card">
-        <div class="card__title">Top tardanzas</div>
-
-        <div class="tabla-wrap" *ngIf="resumen.top_tardanzas.length; else sinTardanzas">
-          <table class="tabla">
-            <thead>
-              <tr>
-                <th>Empleado</th>
-                <th>Hora ingreso</th>
-                <th>Min. tarde</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let r of resumen.top_tardanzas">
-                <td class="nombre">{{ r.nombre_completo }}</td>
-                <td>{{ horaDe(r.fecha_hora_in) }}</td>
-                <td>
-                  <span class="pill pill--tarde">{{ tardanzaLabel(r.minutos_tarde) }}</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <div class="stats-panel">
+        <div class="mini-card">
+          <div class="mini-card__header">
+            <div class="mini-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 19h16v2H4zm1-4h3v3H5zm5-6h3v9h-3zm5 3h3v6h-3z" />
+              </svg>
+            </div>
+            <div class="mini-card__title">Asistencia del dia</div>
+          </div>
+          <div class="mini-card__value">{{ asistenciaPct() }}%</div>
+          <div class="mini-card__meta">
+            {{ resumen.marcaron_ingreso }} de {{ resumen.total_empleados }} marcaron
+          </div>
+          <div class="progress">
+            <div class="progress__bar" [style.width.%]="asistenciaPct()"></div>
+          </div>
         </div>
 
-        <ng-template #sinTardanzas>
-          <div class="vacio">No hay tardanzas en esta fecha.</div>
-        </ng-template>
+        <div class="mini-card">
+          <div class="mini-card__header">
+            <div class="mini-card__icon mini-card__icon--warning" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 1a11 11 0 1 0 11 11A11 11 0 0 0 12 1zm1 11.41 3.29 3.3-1.41 1.41L11 13V6h2z" />
+              </svg>
+            </div>
+            <div class="mini-card__title">Tardanzas</div>
+          </div>
+          <div class="mini-card__value">{{ resumen.tardanzas }}</div>
+          <div class="mini-card__meta" *ngIf="resumen.tardanzas; else sinTardanzaMeta">
+            Maxima de {{ maxTardanza() }} min
+          </div>
+          <ng-template #sinTardanzaMeta>
+            <div class="mini-card__meta">Sin tardanzas hoy</div>
+          </ng-template>
+        </div>
+
+        <div class="mini-card">
+          <div class="mini-card__header">
+            <div class="mini-card__icon mini-card__icon--neutral" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 1a11 11 0 1 0 11 11A11 11 0 0 0 12 1zm1 11.41 3.29 3.3-1.41 1.41L11 13V6h2z" />
+              </svg>
+            </div>
+            <div class="mini-card__title">Ultimo ingreso</div>
+          </div>
+          <div class="mini-card__value">{{ ultimaHoraIngreso() }}</div>
+          <div class="mini-card__meta" *ngIf="ultimaHoraIngreso() !== '-'; else sinUltimoIngreso">
+            Hora mas reciente registrada hoy
+          </div>
+          <ng-template #sinUltimoIngreso>
+            <div class="mini-card__meta">Aun no hay ingresos en esta fecha</div>
+          </ng-template>
+        </div>
       </div>
     </div>
   </ng-container>

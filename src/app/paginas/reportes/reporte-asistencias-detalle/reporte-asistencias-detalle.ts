@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 
-import Swal from 'sweetalert2';
+import Swal from '../../../nucleo/servicios/alerta-tema';
 
 import { ServicioReportes } from '../../../nucleo/servicios/servicio-reportes';
 import { ServicioSedes } from '../../../nucleo/servicios/servicio-sedes';

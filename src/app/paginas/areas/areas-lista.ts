@@ -7,7 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { finalize } from 'rxjs';
-import Swal from 'sweetalert2';
+import Swal from '../../nucleo/servicios/alerta-tema';
 import { ServicioAreas } from '../../nucleo/servicios/servicio-areas';
 
 @Component({
@@ -167,8 +167,6 @@ export class AreasListaComponent implements OnInit {
       confirmButtonText: esEdicion ? 'Sí, actualizar' : 'Sí, crear',
       cancelButtonText: 'Cancelar',
       reverseButtons: true,
-      background: '#111',
-      color: '#f5f5f5',
     });
 
     if (!confirm.isConfirmed) {
@@ -216,8 +214,6 @@ export class AreasListaComponent implements OnInit {
               : 'El área se registró correctamente.',
             timer: 1400,
             showConfirmButton: false,
-            background: '#111',
-            color: '#f5f5f5',
           });
 
           // ✅ 3) Refresco final para mantener consistencia (idempotente)
@@ -232,8 +228,6 @@ export class AreasListaComponent implements OnInit {
             text:
               err?.error?.message ||
               'Ocurrió un error al guardar el área. Intente nuevamente.',
-            background: '#111',
-            color: '#f5f5f5',
           });
 
           this.restoreModal(snap);
@@ -252,8 +246,6 @@ export class AreasListaComponent implements OnInit {
       confirmButtonText: 'Sí, desactivar',
       cancelButtonText: 'Cancelar',
       reverseButtons: true,
-      background: '#111',
-      color: '#f5f5f5',
     });
 
     if (!confirm.isConfirmed) return;
@@ -276,8 +268,6 @@ export class AreasListaComponent implements OnInit {
             text: 'El área se desactivó correctamente.',
             timer: 1400,
             showConfirmButton: false,
-            background: '#111',
-            color: '#f5f5f5',
           });
 
           this.cargarAreas();
@@ -294,8 +284,6 @@ export class AreasListaComponent implements OnInit {
             text:
               err?.error?.message ||
               'Ocurrió un error al desactivar el área. Intente nuevamente.',
-            background: '#111',
-            color: '#f5f5f5',
           });
         },
       });

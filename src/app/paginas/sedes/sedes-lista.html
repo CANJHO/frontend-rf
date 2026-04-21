@@ -1,114 +1,131 @@
-<div class="contenedor-usuarios">
-
-  <!-- CABECERA -->
-  <div class="cabecera">
-    <h2 class="titulo">Sedes</h2>
+<div class="sedes">
+  <div class="sedes__hero">
+    <div>
+      <div class="sedes__eyebrow">Gestion</div>
+      <h2 class="sedes__titulo">Sedes</h2>
+      <p class="sedes__subtitulo">
+        Administra las sedes del sistema y controla su disponibilidad para la operacion.
+      </p>
+    </div>
 
     <button
       type="button"
-      class="boton-accion"
+      class="btn btn--primary"
       (click)="abrirNueva()">
+      <span class="btn__icon" aria-hidden="true">+</span>
       Nueva sede
     </button>
   </div>
 
-  <!-- ESTADO: cargando -->
-  <div *ngIf="cargando" class="cargando">
+  <div *ngIf="cargando" class="estado estado--loading">
     Cargando sedes...
   </div>
 
-  <!-- ESTADO: error -->
-  <div *ngIf="!cargando && errorCarga" class="mensaje-error">
-    Ocurrió un error al cargar las sedes.
-    <button type="button" class="boton-accion" (click)="cargarSedes()">
-      Reintentar
-    </button>
+  <div *ngIf="!cargando && errorCarga" class="estado estado--error">
+    Ocurrio un error al cargar las sedes.
+    <button type="button" class="btn-link" (click)="cargarSedes()">Reintentar</button>
   </div>
 
-  <!-- ESTADO: datos correctos -->
   <ng-container *ngIf="!cargando && !errorCarga">
+    <div class="sedes-card" *ngIf="sedes.length > 0; else sinSedes">
+      <div class="sedes-card__header">
+        <div>
+          <div class="sedes-card__title">Directorio de sedes</div>
+          <div class="sedes-card__subtitle">{{ sedes.length }} registradas</div>
+        </div>
+      </div>
 
-    <!-- TABLA -->
-    <table *ngIf="sedes.length > 0; else sinSedes" class="tabla-usuarios">
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Estado</th>
-          <th class="col-acciones">Acciones</th>
-        </tr>
-      </thead>
+      <div class="tabla-wrap">
+        <table class="tabla-sedes">
+          <thead>
+            <tr>
+              <th>Sede</th>
+              <th>Estado</th>
+              <th class="th-acciones">Acciones</th>
+            </tr>
+          </thead>
 
-      <tbody>
-        <tr *ngFor="let s of sedes">
-          <td>{{ s.nombre }}</td>
+          <tbody>
+            <tr *ngFor="let s of sedes">
+              <td>
+                <div class="sede-cell">
+                  <div class="sede-cell__avatar">
+                    {{ (s.nombre?.[0] || 'S') }}
+                  </div>
+                  <div class="sede-cell__nombre">{{ s.nombre }}</div>
+                </div>
+              </td>
 
-          <td>
-            <span
-              class="estado"
-              [class.activo]="s.activo"
-              [class.inactivo]="!s.activo">
-              {{ s.activo ? 'Activa' : 'Inactiva' }}
-            </span>
-          </td>
+              <td>
+                <span
+                  class="badge-estado"
+                  [class.badge-estado--activo]="s.activo"
+                  [class.badge-estado--inactivo]="!s.activo">
+                  {{ s.activo ? 'Activa' : 'Inactiva' }}
+                </span>
+              </td>
 
-          <td class="col-acciones">
+              <td class="td-acciones">
+                <div class="acciones">
+                  <button
+                    type="button"
+                    class="accion-btn accion-btn--edit"
+                    (click)="abrirEditar(s)"
+                    aria-label="Editar sede">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm17.71-10.04a1.004 1.004 0 0 0 0-1.42l-2.5-2.5a1.004 1.004 0 0 0-1.42 0l-1.96 1.96 3.75 3.75 2.13-1.79z"
+                      />
+                    </svg>
+                  </button>
 
-            <!-- EDITAR -->
-            <button
-              type="button"
-              class="boton-accion boton-editar"
-              (click)="abrirEditar(s)"
-              title="Editar sede">
-              ✏️
-            </button>
+                  <button
+                    *ngIf="s.activo"
+                    type="button"
+                    class="accion-btn accion-btn--toggle"
+                    (click)="desactivar(s)"
+                    aria-label="Desactivar sede">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M12 2a10 10 0 1 0 10 10A10.01 10.01 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.01 8.01 0 0 1-8 8zm4-9H8v2h8z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-            <!-- DESACTIVAR (solo si está activa) -->
-            <button
-              *ngIf="s.activo"
-              type="button"
-              class="boton-accion boton-eliminar"
-              (click)="desactivar(s)"
-              title="Desactivar sede">
-              ⛔
-            </button>
-
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- SIN REGISTROS -->
     <ng-template #sinSedes>
-      <div class="sin-registros">
+      <div class="estado estado--empty">
         No hay sedes registradas.
       </div>
     </ng-template>
-
   </ng-container>
 </div>
 
-<!-- MODAL -->
 <div
   class="modal-overlay"
   *ngIf="mostrandoModal"
-  (click)="cerrarModal()">
-</div>
+  (click)="cerrarModal()"></div>
 
 <div
   class="modal-contenedor"
   *ngIf="mostrandoModal">
-
   <h2 class="titulo-modal">
     {{ sedeEditando ? 'Editar sede' : 'Nueva sede' }}
   </h2>
 
   <form [formGroup]="formulario" (ngSubmit)="guardarSede()">
-
     <div class="campo">
-      
+      <label>Nombre de la sede</label>
       <input type="text" formControlName="nombre" />
 
-      <div class="mensaje-error"
+      <div
+        class="mensaje-error"
         *ngIf="formulario.get('nombre')?.invalid && formulario.get('nombre')?.touched">
         El nombre es obligatorio.
       </div>
@@ -121,7 +138,7 @@
       </label>
     </div>
 
-    <div class="acciones">
+    <div class="acciones-modal">
       <button
         type="button"
         class="btn-cerrar"
@@ -132,9 +149,8 @@
       <button
         type="submit"
         class="btn-guardar">
-        Guardar
+        {{ sedeEditando ? 'Actualizar' : 'Guardar' }}
       </button>
     </div>
-
   </form>
 </div>

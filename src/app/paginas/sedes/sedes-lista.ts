@@ -7,7 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { finalize } from 'rxjs';
-import Swal from 'sweetalert2';
+import Swal from '../../nucleo/servicios/alerta-tema';
 import { ServicioSedes } from '../../nucleo/servicios/servicio-sedes';
 
 @Component({
@@ -161,8 +161,6 @@ export class SedesListaComponent implements OnInit {
       confirmButtonText: esEdicion ? 'Sí, actualizar' : 'Sí, crear',
       cancelButtonText: 'Cancelar',
       reverseButtons: true,
-      background: '#111',
-      color: '#f5f5f5',
     });
 
     // si cancelan, reabrimos modal con datos
@@ -204,8 +202,6 @@ export class SedesListaComponent implements OnInit {
               : 'La sede se registró correctamente.',
             timer: 1400,
             showConfirmButton: false,
-            background: '#111',
-            color: '#f5f5f5',
           });
 
           // ✅ refresco final
@@ -220,8 +216,6 @@ export class SedesListaComponent implements OnInit {
             text:
               err?.error?.message ||
               'Ocurrió un error al guardar la sede. Intente nuevamente.',
-            background: '#111',
-            color: '#f5f5f5',
           });
 
           // ✅ reabrir modal con lo editado
@@ -241,8 +235,6 @@ export class SedesListaComponent implements OnInit {
       confirmButtonText: 'Sí, desactivar',
       cancelButtonText: 'Cancelar',
       reverseButtons: true,
-      background: '#111',
-      color: '#f5f5f5',
     });
 
     if (!confirm.isConfirmed) return;
@@ -264,8 +256,6 @@ export class SedesListaComponent implements OnInit {
             text: 'La sede se desactivó correctamente.',
             timer: 1400,
             showConfirmButton: false,
-            background: '#111',
-            color: '#f5f5f5',
           });
 
           this.cargarSedes();
@@ -282,8 +272,6 @@ export class SedesListaComponent implements OnInit {
             text:
               err?.error?.message ||
               'Ocurrió un error al desactivar la sede. Intente nuevamente.',
-            background: '#111',
-            color: '#f5f5f5',
           });
         },
       });

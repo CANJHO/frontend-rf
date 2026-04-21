@@ -1,98 +1,127 @@
-<div class="contenedor-usuarios">
-  <!-- Cabecera -->
-  <div class="cabecera">
-    <h2 class="titulo">Áreas</h2>
-
-    <div class="acciones-cabecera">
-
-      <button
-        type="button"
-        class="boton-accion"
-        (click)="abrirNueva()">
-        Nueva área
-      </button>
+<div class="areas">
+  <div class="areas__hero">
+    <div>
+      <div class="areas__eyebrow">Gestion</div>
+      <h2 class="areas__titulo">Areas</h2>
+      <p class="areas__subtitulo">
+        Administra las areas activas del sistema y controla su disponibilidad.
+      </p>
     </div>
+
+    <button
+      type="button"
+      class="btn btn--primary"
+      (click)="abrirNueva()">
+      <span class="btn__icon" aria-hidden="true">+</span>
+      Nueva area
+    </button>
   </div>
 
-
-  <!-- Estado: cargando -->
-  <div *ngIf="cargando" class="cargando">
-    Cargando áreas...
+  <div *ngIf="cargando" class="estado estado--loading">
+    Cargando areas...
   </div>
 
+  <div *ngIf="!cargando && errorCarga" class="estado estado--error">
+    Ocurrio un error al cargar las areas.
+    <button type="button" class="btn-link" (click)="cargarAreas()">Reintentar</button>
+  </div>
 
-  <!-- Estado: datos OK -->
   <ng-container *ngIf="!cargando && !errorCarga">
+    <div class="areas-card" *ngIf="areas.length > 0; else sinAreas">
+      <div class="areas-card__header">
+        <div>
+          <div class="areas-card__title">Directorio de areas</div>
+          <div class="areas-card__subtitle">{{ areas.length }} registradas</div>
+        </div>
+      </div>
 
-    <table *ngIf="areas.length > 0; else sinAreas" class="tabla-usuarios">
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Estado</th>
-          <th class="col-acciones">Acciones</th>
-        </tr>
-      </thead>
+      <div class="tabla-wrap">
+        <table class="tabla-areas">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Estado</th>
+              <th class="th-acciones">Acciones</th>
+            </tr>
+          </thead>
 
-      <tbody>
-        <tr *ngFor="let a of areas">
-          <td>{{ a.nombre }}</td>
+          <tbody>
+            <tr *ngFor="let a of areas">
+              <td>
+                <div class="area-cell">
+                  <div class="area-cell__avatar">
+                    {{ (a.nombre?.[0] || 'A') }}
+                  </div>
+                  <div class="area-cell__nombre">{{ a.nombre }}</div>
+                </div>
+              </td>
 
-          <td>
-            <span
-              class="estado"
-              [class.activo]="a.activo"
-              [class.inactivo]="!a.activo">
-              {{ a.activo ? 'Activa' : 'Inactiva' }}
-            </span>
-          </td>
+              <td>
+                <span
+                  class="badge-estado"
+                  [class.badge-estado--activo]="a.activo"
+                  [class.badge-estado--inactivo]="!a.activo">
+                  {{ a.activo ? 'Activa' : 'Inactiva' }}
+                </span>
+              </td>
 
-          <td class="col-acciones">
-            <button
-              type="button"
-              class="boton-editar"
-              (click)="abrirEditar(a)">
-              ✏️
-            </button>
+              <td class="td-acciones">
+                <div class="acciones">
+                  <button
+                    type="button"
+                    class="accion-btn accion-btn--edit"
+                    (click)="abrirEditar(a)"
+                    aria-label="Editar area">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm17.71-10.04a1.004 1.004 0 0 0 0-1.42l-2.5-2.5a1.004 1.004 0 0 0-1.42 0l-1.96 1.96 3.75 3.75 2.13-1.79z"
+                      />
+                    </svg>
+                  </button>
 
-            <button
-              type="button"
-              class="boton-accion boton-eliminar"
-              *ngIf="a.activo"
-              (click)="desactivar(a)">
-              ⛔
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+                  <button
+                    type="button"
+                    class="accion-btn accion-btn--toggle"
+                    *ngIf="a.activo"
+                    (click)="desactivar(a)"
+                    aria-label="Desactivar area">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M12 2a10 10 0 1 0 10 10A10.01 10.01 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.01 8.01 0 0 1-8 8zm4-9H8v2h8z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
     <ng-template #sinAreas>
-      <div class="sin-registros">
-        No hay áreas registradas.
+      <div class="estado estado--empty">
+        No hay areas registradas.
       </div>
     </ng-template>
-
   </ng-container>
 </div>
 
-<!-- MODAL: igual estilo que Usuarios -->
 <div
   class="modal-overlay"
   *ngIf="mostrandoModal"
-  (click)="cerrarModal()">
-</div>
+  (click)="cerrarModal()"></div>
 
 <div
   class="modal-contenedor"
   *ngIf="mostrandoModal">
   <h2 class="titulo-modal">
-    {{ areaEditando ? 'Editar área' : 'Nueva área' }}
+    {{ areaEditando ? 'Editar area' : 'Nueva area' }}
   </h2>
 
   <form [formGroup]="formulario" (ngSubmit)="guardarArea()">
-
     <div class="campo">
-      <label>Nombre del área</label>
+      <label>Nombre del area</label>
       <input type="text" formControlName="nombre" />
     </div>
 
@@ -103,7 +132,7 @@
       </label>
     </div>
 
-    <div class="acciones">
+    <div class="acciones-modal">
       <button
         type="button"
         class="btn-cerrar"
@@ -117,6 +146,5 @@
         {{ areaEditando ? 'Actualizar' : 'Guardar' }}
       </button>
     </div>
-
   </form>
 </div>

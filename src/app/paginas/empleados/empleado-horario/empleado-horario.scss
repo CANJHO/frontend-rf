@@ -1,12 +1,9 @@
 .horario-wrapper {
-  color: #f5f5f5;
+  color: var(--text-primary);
   font-family: 'Segoe UI', sans-serif;
   padding-top: 0.5rem;
 }
 
-/* =======================================
-   HEADER
-   ======================================= */
 .horario-header {
   display: flex;
   justify-content: space-between;
@@ -16,15 +13,15 @@
 
 .horario-header .btn-volver {
   background: transparent;
-  border: 1px solid rgba(212, 175, 55, 0.6);
-  color: #d4af37;
+  border: 1px solid var(--border-strong);
+  color: var(--accent);
   padding: 0.35rem 0.8rem;
   border-radius: 999px;
   font-size: 0.85rem;
   cursor: pointer;
 
   &:hover {
-    background: rgba(212, 175, 55, 0.15);
+    background: var(--bg-hover-soft);
   }
 }
 
@@ -42,17 +39,14 @@
 
 .titulo-grupo .subtitulo {
   font-size: 0.9rem;
-  color: #cccccc;
+  color: var(--text-muted);
 
   span {
-    color: #f6c326;
+    color: var(--accent);
     font-weight: 600;
   }
 }
 
-/* =======================================
-   FECHA DE VIGENCIA
-   ======================================= */
 .vigencia-box {
   display: inline-flex;
   align-items: center;
@@ -60,50 +54,43 @@
   margin-bottom: 1rem;
   padding: 0.5rem 0.8rem;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-md);
 
   label {
     font-size: 0.9rem;
-    color: #f6e6a5;
+    color: var(--text-secondary);
     font-weight: 500;
   }
-  
-  /* 🔧 Icono del calendario (input type="date") en blanco */
-  input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
+
+  input[type='date']::-webkit-calendar-picker-indicator {
     opacity: 1;
     cursor: pointer;
   }
 
   input[type='date'] {
-    background: #050505;
+    background: var(--bg-input);
     border-radius: 999px;
-    border: 1px solid rgba(212, 175, 55, 0.7);
-    color: #f5f5f5;
+    border: 1px solid var(--border-strong);
+    color: var(--text-primary);
     padding: 0.25rem 0.6rem;
     font-size: 0.85rem;
     outline: none;
 
     &:focus {
-      box-shadow: 0 0 0 1px rgba(246, 195, 38, 0.8);
+      box-shadow: 0 0 0 1px var(--accent);
     }
   }
 }
 
-/* =======================================
-   GRID SEMANAL
-   ======================================= */
 .semana-grid {
   display: grid;
   gap: 1rem;
   margin-bottom: 1.4rem;
-
-  /* Desktop ancho: 4 columnas (Lun–Jue / Vie–Dom) */
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-/* Breakpoints */
 @media (max-width: 1200px) {
   .semana-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -122,27 +109,23 @@
   }
 }
 
-/* =======================================
-   TARJETA DÍA
-   ======================================= */
 .dia-card {
-  background: radial-gradient(circle at top left, #1b1b1b, #050505 55%);
+  background: var(--bg-shell);
   border-radius: 14px;
   padding: 0.85rem 0.9rem 0.9rem;
-  border: 1px solid rgba(212, 175, 55, 0.28);
-  box-shadow: 0 0 14px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-md);
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
   position: relative;
   overflow: hidden;
 
-  /* detalle suave tipo calendario */
   &::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at top right, rgba(246, 195, 38, 0.08), transparent 55%);
+    background: radial-gradient(circle at top right, var(--accent-soft), transparent 55%);
     opacity: 0.8;
     pointer-events: none;
   }
@@ -155,13 +138,10 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #f6c326;
+  color: var(--accent);
   margin-bottom: 0.1rem;
 }
 
-/* =======================================
-   TOGGLE DESCANSO
-   ======================================= */
 .toggle-linea {
   position: relative;
   z-index: 1;
@@ -169,13 +149,13 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.85rem;
-  color: #f5f5f5;
+  color: var(--text-primary);
   cursor: pointer;
 
   input[type='checkbox'] {
     width: 18px;
     height: 18px;
-    accent-color: #f6c326;
+    accent-color: var(--accent);
     cursor: pointer;
   }
 
@@ -184,9 +164,6 @@
   }
 }
 
-/* =======================================
-   BLOQUE DE TURNOS
-   ======================================= */
 .turnos {
   position: relative;
   z-index: 1;
@@ -197,17 +174,17 @@
 }
 
 .turno-bloque {
-  background: rgba(0, 0, 0, 0.65);
+  background: var(--bg-surface);
   border-radius: 10px;
   padding: 0.45rem 0.55rem;
-  border: 1px solid rgba(212, 175, 55, 0.25);
+  border: 1px solid var(--border-soft);
 }
 
 .turno-titulo {
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(246, 195, 38, 0.85);
+  color: var(--accent);
   margin-bottom: 0.25rem;
 }
 
@@ -220,42 +197,39 @@
     display: flex;
     flex-direction: column;
     font-size: 0.78rem;
-    color: #e2e2e2;
+    color: var(--text-secondary);
   }
-  /* 🔧 Icono del calendario (input type="time") en blanco */
-  input[type="time"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
+
+  input[type='time']::-webkit-calendar-picker-indicator {
     opacity: 1;
     cursor: pointer;
   }
+
   input[type='time'] {
     margin-top: 0.15rem;
-    background: #050505;
+    background: var(--bg-input);
     border-radius: 7px;
-    border: 1px solid rgba(212, 175, 55, 0.6);
-    color: #f5f5f5;
+    border: 1px solid var(--border-strong);
+    color: var(--text-primary);
     padding: 0.15rem 0.35rem;
     font-size: 0.8rem;
     outline: none;
     min-width: 0;
 
     &:focus {
-      box-shadow: 0 0 0 1px rgba(246, 195, 38, 0.9);
+      box-shadow: 0 0 0 1px var(--accent);
     }
   }
 }
 
-/* =======================================
-   TOLERANCIA
-   ======================================= */
 .tolerancia-bloque {
   margin-top: 0.1rem;
   padding-top: 0.35rem;
-  border-top: 1px dashed rgba(212, 175, 55, 0.3);
+  border-top: 1px dashed var(--border-soft);
 
   label {
     font-size: 0.8rem;
-    color: #e2e2e2;
+    color: var(--text-secondary);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -264,74 +238,21 @@
 
   input[type='number'] {
     width: 70px;
-    background: #050505;
+    background: var(--bg-input);
     border-radius: 999px;
-    border: 1px solid rgba(212, 175, 55, 0.6);
-    color: #f5f5f5;
+    border: 1px solid var(--border-strong);
+    color: var(--text-primary);
     padding: 0.18rem 0.4rem;
     font-size: 0.8rem;
     text-align: center;
     outline: none;
 
     &:focus {
-      box-shadow: 0 0 0 1px rgba(246, 195, 38, 0.9);
+      box-shadow: 0 0 0 1px var(--accent);
     }
   }
 }
 
-/* =======================================
-   BOTÓN GUARDAR
-   ======================================= */
-.guardar-box {
-  margin-top: 0.8rem;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.btn-guardar {
-  padding: 0.45rem 1.4rem;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
-  color: #111;
-  border: none;
-  font-size: 0.85rem;
-  cursor: pointer;
-  font-weight: 600;
-  box-shadow: 0 0 10px rgba(39, 174, 96, 0.55);
-  transition: all 0.15s ease;
-
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 0 14px rgba(39, 174, 96, 0.9);
-  }
-
-  &:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
-  }
-}
-
-/* =======================================
-   ESTADOS
-   ======================================= */
-.estado-cargando,
-.estado-error {
-  margin-top: 1.2rem;
-  font-size: 0.95rem;
-}
-
-.estado-cargando {
-  color: #f6c326;
-}
-
-.estado-error {
-  color: #ff6b6b;
-}
-/* =======================================
-   BOTONES ACCIÓN
-   ======================================= */
 .guardar-box {
   margin-top: 0.8rem;
   display: flex;
@@ -344,33 +265,33 @@
   padding: 0.4rem 1rem;
   border-radius: 999px;
   background: transparent;
-  border: 1px solid rgba(212, 175, 55, 0.7);
-  color: #f6c326;
+  border: 1px solid var(--border-strong);
+  color: var(--accent);
   font-size: 0.8rem;
   cursor: pointer;
   font-weight: 500;
   transition: all 0.15s ease;
 
   &:hover {
-    background: rgba(212, 175, 55, 0.12);
+    background: var(--bg-hover-soft);
   }
 }
 
 .btn-guardar {
   padding: 0.45rem 1.4rem;
   border-radius: 999px;
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
-  color: #111;
+  background: linear-gradient(135deg, var(--success), #27ae60);
+  color: var(--text-inverse);
   border: none;
   font-size: 0.85rem;
   cursor: pointer;
   font-weight: 600;
-  box-shadow: 0 0 10px rgba(39, 174, 96, 0.55);
+  box-shadow: var(--shadow-md);
   transition: all 0.15s ease;
 
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 0 14px rgba(39, 174, 96, 0.9);
+    box-shadow: var(--shadow-lg);
   }
 
   &:disabled {
@@ -381,16 +302,27 @@
   }
 }
 
-/* =======================================
-   HISTORIAL
-   ======================================= */
+.estado-cargando,
+.estado-error {
+  margin-top: 1.2rem;
+  font-size: 0.95rem;
+}
+
+.estado-cargando {
+  color: var(--accent);
+}
+
+.estado-error {
+  color: var(--danger);
+}
+
 .historial-wrapper {
   margin-top: 1.2rem;
   padding: 0.8rem 1rem;
   border-radius: 14px;
-  background: radial-gradient(circle at top left, #141414, #050505 55%);
-  border: 1px solid rgba(212, 175, 55, 0.35);
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+  background: var(--bg-shell);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-md);
 }
 
 .historial-titulo {
@@ -398,13 +330,13 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #f6c326;
+  color: var(--accent);
   margin-bottom: 0.6rem;
 }
 
 .historial-estado {
   font-size: 0.85rem;
-  color: #e2e2e2;
+  color: var(--text-secondary);
 }
 
 .historial-lista {
@@ -417,8 +349,8 @@
 .historial-item {
   padding: 0.5rem 0.6rem;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.65);
-  border: 1px solid rgba(212, 175, 55, 0.25);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
 }
 
 .historial-fechas {
@@ -427,7 +359,7 @@
   align-items: center;
   gap: 0.35rem;
   font-size: 0.83rem;
-  color: #f5f5f5;
+  color: var(--text-primary);
 }
 
 .historial-fecha-inicio,
@@ -442,33 +374,30 @@
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  border: 1px solid rgba(212, 175, 55, 0.75);
-  color: #f6c326;
+  border: 1px solid var(--accent);
+  color: var(--accent);
 }
 
 .historial-badge.vigente {
-  background: rgba(46, 204, 113, 0.1);
-  border-color: rgba(46, 204, 113, 0.9);
-  color: #2ecc71;
+  background: var(--success-soft);
+  border-color: var(--success-border);
+  color: var(--success);
 }
 
 .historial-resumen {
   margin-top: 0.25rem;
   font-size: 0.8rem;
-  color: #cccccc;
+  color: var(--text-muted);
 }
-/* =======================================================
-   EXCEPCIONES DE HORARIO POR FECHA
-   ======================================================= */
 
 .excepciones-wrapper {
   margin-top: 2rem;
   padding: 1.5rem 1.7rem 1.7rem;
   border-radius: 18px;
-  border: 1px solid rgba(212, 175, 55, 0.35);
-  background: radial-gradient(circle at top left, #141414, #050505 60%);
-  box-shadow: 0 0 18px rgba(0, 0, 0, 0.6);
-  color: #f5f5f5;
+  border: 1px solid var(--border-soft);
+  background: var(--bg-shell);
+  box-shadow: var(--shadow-md);
+  color: var(--text-primary);
 }
 
 .excepciones-header {
@@ -479,13 +408,13 @@
     font-size: 1.15rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: #f6c326;
+    color: var(--accent);
   }
 
   p {
     margin: 0;
     font-size: 0.85rem;
-    color: #d0d0d0;
+    color: var(--text-secondary);
   }
 }
 
@@ -499,13 +428,12 @@
   }
 }
 
-/* LADO IZQUIERDO: FORMULARIO */
 .ex-form {
   flex: 1.1;
-  background: rgba(0, 0, 0, 0.55);
+  background: var(--bg-surface);
   border-radius: 14px;
   padding: 1rem 1.1rem 1.1rem;
-  border: 1px solid rgba(212, 175, 55, 0.25);
+  border: 1px solid var(--border-soft);
 }
 
 .ex-form .campo {
@@ -515,18 +443,12 @@
 
   label {
     font-size: 0.82rem;
-    color: #f6e6a5;
+    color: var(--text-secondary);
     margin-bottom: 0.2rem;
   }
-  /* 🔧 Icono del calendario (input type="date") en blanco */
-  input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-    opacity: 1;
-    cursor: pointer;
-  }
-  /* 🔧 Icono del calendario (input type="time") en blanco */
-  input[type="time"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
+
+  input[type='date']::-webkit-calendar-picker-indicator,
+  input[type='time']::-webkit-calendar-picker-indicator {
     opacity: 1;
     cursor: pointer;
   }
@@ -535,10 +457,10 @@
   input[type='time'],
   select,
   textarea {
-    background: #050505;
+    background: var(--bg-input);
     border-radius: 999px;
-    border: 1px solid rgba(212, 175, 55, 0.7);
-    color: #f5f5f5;
+    border: 1px solid var(--border-strong);
+    color: var(--text-primary);
     padding: 0.3rem 0.6rem;
     font-size: 0.85rem;
     outline: none;
@@ -554,7 +476,7 @@
   input:focus,
   select:focus,
   textarea:focus {
-    box-shadow: 0 0 0 1px rgba(246, 195, 38, 0.9);
+    box-shadow: 0 0 0 1px var(--accent);
   }
 }
 
@@ -573,13 +495,13 @@
   gap: 0.4rem;
   margin: 0.4rem 0 0.8rem;
   font-size: 0.83rem;
-  color: #f5f5f5;
+  color: var(--text-primary);
   cursor: pointer;
 
   input[type='checkbox'] {
     width: 18px;
     height: 18px;
-    accent-color: #f6c326;
+    accent-color: var(--accent);
     cursor: pointer;
   }
 
@@ -593,10 +515,9 @@
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: rgba(246, 195, 38, 0.9);
+  color: var(--accent);
 }
 
-/* BOTONES EXCEPCIONES */
 .acciones-ex {
   margin-top: 0.8rem;
   display: flex;
@@ -612,12 +533,12 @@
   font-weight: 600;
   background: linear-gradient(135deg, #2980b9, #3498db);
   color: #fefefe;
-  box-shadow: 0 0 10px rgba(41, 128, 185, 0.6);
+  box-shadow: var(--shadow-md);
   transition: all 0.15s ease;
 
   &:hover:not(:disabled) {
     transform: translateY(-1px);
-    box-shadow: 0 0 14px rgba(41, 128, 185, 0.95);
+    box-shadow: var(--shadow-lg);
   }
 
   &:disabled {
@@ -628,33 +549,32 @@
   }
 }
 
-/* LADO DERECHO: ESTADO DE LA FECHA */
 .ex-estado {
   flex: 0.9;
-  background: radial-gradient(circle at top right, rgba(246, 195, 38, 0.06), rgba(0, 0, 0, 0.95));
+  background: var(--bg-surface);
   border-radius: 14px;
   padding: 1rem 1.1rem;
-  border: 1px solid rgba(212, 175, 55, 0.25);
+  border: 1px solid var(--border-soft);
   min-height: 180px;
 }
 
 .ex-estado__cargando {
   font-size: 0.85rem;
-  color: #f6c326;
+  color: var(--accent);
 }
 
 .ex-estado__sin h4,
 .ex-estado__con h4 {
   margin: 0 0 0.4rem;
   font-size: 0.95rem;
-  color: #f6c326;
+  color: var(--accent);
 }
 
 .ex-estado__sin p,
 .ex-estado__con p {
   margin: 0 0 0.3rem;
   font-size: 0.85rem;
-  color: #e0e0e0;
+  color: var(--text-secondary);
 }
 
 .ex-chip {
@@ -662,13 +582,13 @@
   align-items: center;
   padding: 0.16rem 0.7rem;
   border-radius: 999px;
-  background: rgba(246, 195, 38, 0.12);
-  border: 1px solid rgba(246, 195, 38, 0.4);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-border);
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   margin-bottom: 0.6rem;
-  color: #f6c326;
+  color: var(--accent);
 }
 
 .btn-eliminar-excepcion {
@@ -681,12 +601,12 @@
   font-weight: 600;
   background: linear-gradient(135deg, #e74c3c, #c0392b);
   color: #fefefe;
-  box-shadow: 0 0 10px rgba(192, 57, 43, 0.65);
+  box-shadow: var(--shadow-md);
   transition: all 0.15s ease;
 
   &:hover:not(:disabled) {
     transform: translateY(-1px);
-    box-shadow: 0 0 14px rgba(231, 76, 60, 0.95);
+    box-shadow: var(--shadow-lg);
   }
 
   &:disabled {
@@ -695,4 +615,109 @@
     box-shadow: none;
     transform: none;
   }
+}
+
+:host-context([data-theme='light']) .horario-header .btn-volver {
+  background: linear-gradient(135deg, #ffd600, #f4c400);
+  color: #0e0f0c;
+  border-color: rgba(224, 183, 0, 0.45);
+  box-shadow: 0 14px 26px rgba(224, 183, 0, 0.2);
+  font-weight: 800;
+
+  &:hover {
+    background: linear-gradient(135deg, #ffde2f, #ffd600);
+    border-color: rgba(224, 183, 0, 0.58);
+  }
+}
+
+:host-context([data-theme='light']) .titulo-grupo .subtitulo {
+  color: #0e0f0c;
+  font-size: 0.98rem;
+  font-weight: 600;
+
+  span {
+    color: #ffd600;
+    font-weight: 700;
+  }
+}
+
+:host-context([data-theme='light']) .vigencia-box {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(246, 247, 249, 0.97));
+  border-color: rgba(14, 15, 12, 0.08);
+  box-shadow: 0 16px 30px rgba(17, 24, 39, 0.08);
+  padding: 0.58rem 0.95rem;
+
+  label {
+    color: #0e0f0c;
+    font-weight: 700;
+  }
+
+  input[type='date'] {
+    background: #ffffff;
+    border-color: rgba(14, 15, 12, 0.1);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+    min-width: 138px;
+  }
+}
+
+:host-context([data-theme='light']) .dia-titulo,
+:host-context([data-theme='light']) .excepciones-header h3,
+:host-context([data-theme='light']) .ex-estado__sin h4,
+:host-context([data-theme='light']) .ex-estado__con h4 {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.32rem 0.72rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(14, 15, 12, 0.96), rgba(33, 33, 33, 0.9));
+  color: #ffd600;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.1);
+}
+
+:host-context([data-theme='light']) .turno-titulo,
+:host-context([data-theme='light']) .ex-form .subtitulo,
+:host-context([data-theme='light']) .ex-form .campo > label,
+:host-context([data-theme='light']) .check-linea span {
+  color: #7a1f3d;
+}
+
+:host-context([data-theme='light']) .turno-campos label,
+:host-context([data-theme='light']) .fila-horas .campo label {
+  color: #2563eb;
+}
+
+:host-context([data-theme='light']) .tolerancia-bloque label {
+  color: #64748b;
+}
+
+:host-context([data-theme='light']) .dia-card,
+:host-context([data-theme='light']) .historial-wrapper,
+:host-context([data-theme='light']) .excepciones-wrapper,
+:host-context([data-theme='light']) .ex-form,
+:host-context([data-theme='light']) .ex-estado {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(246, 247, 249, 0.97));
+  border-color: rgba(14, 15, 12, 0.08);
+  box-shadow: 0 18px 38px rgba(17, 24, 39, 0.08);
+}
+
+:host-context([data-theme='light']) .turno-bloque {
+  background: #ffffff;
+  border-color: rgba(14, 15, 12, 0.08);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
+}
+
+:host-context([data-theme='light']) .turno-campos input[type='time'],
+:host-context([data-theme='light']) .tolerancia-bloque input[type='number'],
+:host-context([data-theme='light']) .ex-form input[type='date'],
+:host-context([data-theme='light']) .ex-form input[type='time'],
+:host-context([data-theme='light']) .ex-form select,
+:host-context([data-theme='light']) .ex-form textarea {
+  background: #ffffff;
+}
+
+:host-context([data-theme='light']) .ex-estado__sin p,
+:host-context([data-theme='light']) .ex-estado__con p,
+:host-context([data-theme='light']) .historial-estado,
+:host-context([data-theme='light']) .historial-resumen {
+  color: #475569;
 }

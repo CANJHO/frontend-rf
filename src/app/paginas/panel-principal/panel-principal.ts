@@ -1,14 +1,17 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { ServicioAutenticacion } from '../../nucleo/servicios/servicio-autenticacion';
-import Swal from 'sweetalert2';
-import {
-  ServicioEmpleados,
-  CumpleanosProximoRow,
-} from '../../nucleo/servicios/servicio-empleados';
 import { firstValueFrom } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
+import Swal from '../../nucleo/servicios/alerta-tema';
+
+import { ServicioAutenticacion } from '../../nucleo/servicios/servicio-autenticacion';
+import {
+  CumpleanosProximoRow,
+  ServicioEmpleados,
+} from '../../nucleo/servicios/servicio-empleados';
+
+type ThemeMode = 'dark' | 'light';
 
 @Component({
   selector: 'app-panel-principal',
@@ -18,16 +21,15 @@ import { filter, take } from 'rxjs/operators';
   styleUrls: ['./panel-principal.scss'],
 })
 export class PanelPrincipalComponent implements OnInit {
+  private readonly themeStorageKey = 'panel-theme';
+
   usuario$;
 
+  temaActual: ThemeMode = 'dark';
   grupoUsuariosAbierto = false;
   grupoReportesAbierto = false;
   grupoEmpleadosAbierto = false;
-
-  // dropdown perfil
   userMenuOpen = false;
-
-  // drawer móvil
   sidebarOpen = false;
 
   constructor(
@@ -39,6 +41,9 @@ export class PanelPrincipalComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.temaActual = this.obtenerTemaInicial();
+    this.aplicarTema(this.temaActual);
+
     const usuario = await firstValueFrom(
       this.usuario$.pipe(
         filter((u: any) => !!u?.sub),
@@ -49,14 +54,19 @@ export class PanelPrincipalComponent implements OnInit {
     this.mostrarModalCumpleanosSiCorresponde(usuario.sub);
   }
 
-  /* ==========================
-     Drawer móvil
-  ========================== */
+  get temaLabel(): string {
+    return this.temaActual === 'dark' ? 'Oscuro' : 'Claro';
+  }
+
+  toggleTema(): void {
+    this.temaActual = this.temaActual === 'dark' ? 'light' : 'dark';
+    this.aplicarTema(this.temaActual);
+    localStorage.setItem(this.themeStorageKey, this.temaActual);
+  }
 
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
 
-    // si abres el sidebar, cierra el dropdown de usuario
     if (this.sidebarOpen && this.userMenuOpen) this.userMenuOpen = false;
   }
 
@@ -65,19 +75,13 @@ export class PanelPrincipalComponent implements OnInit {
   }
 
   closeSidebarOnMobile() {
-    // cierra solo en móvil (mejor UX)
     if (window.innerWidth <= 768) this.sidebarOpen = false;
   }
-
-  /* ==========================
-     Dropdown perfil
-  ========================== */
 
   toggleUserMenu(event: MouseEvent) {
     event.stopPropagation();
     this.userMenuOpen = !this.userMenuOpen;
 
-    // si abres el dropdown, cierra el sidebar
     if (this.userMenuOpen && this.sidebarOpen) this.sidebarOpen = false;
   }
 
@@ -92,7 +96,6 @@ export class PanelPrincipalComponent implements OnInit {
 
   @HostListener('window:resize')
   onResize() {
-    // si pasas a desktop, asegúrate de cerrar el drawer para evitar estados raros
     if (window.innerWidth > 768 && this.sidebarOpen) this.sidebarOpen = false;
   }
 
@@ -104,9 +107,14 @@ export class PanelPrincipalComponent implements OnInit {
     return `${i1}${i2}` || 'U';
   }
 
-  /* ==========================
-     Cumpleaños
-  ========================== */
+  private obtenerTemaInicial(): ThemeMode {
+    const guardado = localStorage.getItem(this.themeStorageKey);
+    return guardado === 'light' ? 'light' : 'dark';
+  }
+
+  private aplicarTema(theme: ThemeMode): void {
+    document.documentElement.setAttribute('data-theme', theme);
+  }
 
   private async mostrarModalCumpleanosSiCorresponde(usuarioId: string) {
     const hoy = new Date();
@@ -159,25 +167,27 @@ export class PanelPrincipalComponent implements OnInit {
       };
 
       const html = `
-        <div style="text-align:left; line-height:1.45;">
-          <div style="margin-bottom:10px; color:#cfcfcf;">
+        <div class="app-swal-copy">
+          <div class="app-swal-copy__intro">
             Cumpleaños próximos en los siguientes 5 días:
           </div>
-          <ul style="padding-left:18px; margin:0;">
-            ${lista.map((r) => {
-              const nombre =
-                `${r.nombre} ${r.apellido_paterno || ''} ${r.apellido_materno || ''}`.trim();
-              const faltan = Number(r.dias_faltan || 0);
-              const fechaBonita = etiquetaFecha(r.proximo_cumple, faltan);
-              const labelFaltan = etiquetaTiempo(faltan);
-              return `
-                <li style="margin:8px 0;">
-                  <strong>${nombre}</strong><br/>
-                  <span style="color:#d4af37;">${fechaBonita}</span>
-                  <span style="color:#9a9a9a;"> - ${labelFaltan}</span>
-                </li>
-              `;
-            }).join('')}
+          <ul class="app-swal-copy__list">
+            ${lista
+              .map((r) => {
+                const nombre =
+                  `${r.nombre} ${r.apellido_paterno || ''} ${r.apellido_materno || ''}`.trim();
+                const faltan = Number(r.dias_faltan || 0);
+                const fechaBonita = etiquetaFecha(r.proximo_cumple, faltan);
+                const labelFaltan = etiquetaTiempo(faltan);
+                return `
+                  <li class="app-swal-copy__item">
+                    <strong>${nombre}</strong><br/>
+                    <span class="app-swal-copy__accent">${fechaBonita}</span>
+                    <span class="app-swal-copy__muted"> - ${labelFaltan}</span>
+                  </li>
+                `;
+              })
+              .join('')}
           </ul>
         </div>
       `;
@@ -187,9 +197,6 @@ export class PanelPrincipalComponent implements OnInit {
         html,
         icon: 'info',
         confirmButtonText: 'Entendido',
-        confirmButtonColor: '#d4af37',
-        background: '#111',
-        color: '#f5f5f5',
       });
 
       sessionStorage.setItem(key, '1');
@@ -197,10 +204,6 @@ export class PanelPrincipalComponent implements OnInit {
       console.error('Error obteniendo cumpleaños próximos:', err);
     }
   }
-
-  /* ==========================
-     Toggles grupos
-  ========================== */
 
   toggleGrupoUsuarios() {
     this.grupoUsuariosAbierto = !this.grupoUsuariosAbierto;
@@ -220,12 +223,8 @@ export class PanelPrincipalComponent implements OnInit {
       text: 'Su sesión actual será cerrada.',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#d4af37',
-      cancelButtonColor: '#444',
       confirmButtonText: 'Sí, cerrar',
       cancelButtonText: 'Cancelar',
-      background: '#111',
-      color: '#f5f5f5',
     }).then((result) => {
       if (result.isConfirmed) {
         this.servicioAutenticacion.cerrarSesion();

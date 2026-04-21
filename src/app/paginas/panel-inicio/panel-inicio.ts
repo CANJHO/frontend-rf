@@ -144,4 +144,28 @@ export class PanelInicioComponent implements OnInit {
     const v = Number(mins || 0);
     return v > 0 ? `${v} min` : '0';
   }
+
+  asistenciaPct(): number {
+    if (!this.resumen?.total_empleados) return 0;
+    return Math.round((this.resumen.marcaron_ingreso / this.resumen.total_empleados) * 100);
+  }
+
+  ultimaHoraIngreso(): string {
+    const ingresos = this.resumen?.ingresos || [];
+    if (!ingresos.length) return '-';
+
+    const sorted = [...ingresos].sort((a, b) => {
+      const fa = new Date(a?.fecha_hora_in || 0).getTime();
+      const fb = new Date(b?.fecha_hora_in || 0).getTime();
+      return fb - fa;
+    });
+
+    return this.horaDe(sorted[0]?.fecha_hora_in);
+  }
+
+  maxTardanza(): number {
+    const top = this.resumen?.top_tardanzas || [];
+    if (!top.length) return 0;
+    return Math.max(...top.map((row) => Number(row?.minutos_tarde || 0)));
+  }
 }

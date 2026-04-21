@@ -5,7 +5,7 @@ import { finalize } from 'rxjs';
 import { ServicioUsuarios } from '../../../nucleo/servicios/servicio-usuarios';
 import { ModalUsuarioComponent } from '../modal-usuario/modal-usuario';
 import { FormsModule } from '@angular/forms';
-import Swal from 'sweetalert2';
+import Swal from '../../../nucleo/servicios/alerta-tema';
 
 @Component({
   selector: 'app-usuarios-lista',
@@ -47,6 +47,16 @@ export class UsuariosListar implements OnInit {
   get totalPaginas(): number {
     if (!this.totalRegistros || !this.tamanoPagina) return 1;
     return Math.max(1, Math.ceil(this.totalRegistros / this.tamanoPagina));
+  }
+
+  get rangoInicio(): number {
+    if (!this.totalRegistros) return 0;
+    return (this.paginaActual - 1) * this.tamanoPagina + 1;
+  }
+
+  get rangoFin(): number {
+    if (!this.totalRegistros) return 0;
+    return Math.min(this.paginaActual * this.tamanoPagina, this.totalRegistros);
   }
 
   cargarUsuarios(texto?: string): void {
@@ -138,8 +148,6 @@ export class UsuariosListar implements OnInit {
       confirmButtonText: `Sí, ${accionTexto}`,
       cancelButtonText: 'Cancelar',
       reverseButtons: true,
-      background: '#111',
-      color: '#f5f5f5',
     });
 
     if (!resultado.isConfirmed) return;
@@ -170,8 +178,6 @@ export class UsuariosListar implements OnInit {
               : 'El usuario fue marcado como inactivo.',
             timer: 1400,
             showConfirmButton: false,
-            background: '#111',
-            color: '#f5f5f5',
           });
 
           // ✅ 3) Recargar lista (con cache-bust desde el service)
@@ -188,8 +194,6 @@ export class UsuariosListar implements OnInit {
             icon: 'error',
             title: 'Error',
             text: 'No se pudo cambiar el estado del usuario. Intente nuevamente.',
-            background: '#111',
-            color: '#f5f5f5',
           });
         },
       });

@@ -9,7 +9,7 @@ import { finalize } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { ServicioHorarios } from '../../../nucleo/servicios/servicio-horarios';
 import jsPDF from 'jspdf';
-import Swal from 'sweetalert2';
+import Swal from '../../../nucleo/servicios/alerta-tema';
 
 @Component({
   selector: 'app-empleados-lista',
@@ -46,6 +46,16 @@ export class EmpleadosListaComponent implements OnInit {
       return 1;
     }
     return Math.max(1, Math.ceil(this.totalRegistros / this.tamanoPagina));
+  }
+
+  get rangoInicio(): number {
+    if (!this.totalRegistros) return 0;
+    return (this.paginaActual - 1) * this.tamanoPagina + 1;
+  }
+
+  get rangoFin(): number {
+    if (!this.totalRegistros) return 0;
+    return Math.min(this.paginaActual * this.tamanoPagina, this.totalRegistros);
   }
 
   cargarEmpleados(pagina: number): void {
@@ -207,8 +217,6 @@ export class EmpleadosListaComponent implements OnInit {
               icon: 'error',
               title: 'Error',
               text: 'No se pudo generar el PDF de horario.',
-              background: '#111',
-              color: '#f5f5f5',
             });
           }
         },
@@ -218,8 +226,6 @@ export class EmpleadosListaComponent implements OnInit {
             icon: 'error',
             title: 'Error',
             text: 'No se pudo obtener el horario vigente del empleado.',
-            background: '#111',
-            color: '#f5f5f5',
           });
         },
       });

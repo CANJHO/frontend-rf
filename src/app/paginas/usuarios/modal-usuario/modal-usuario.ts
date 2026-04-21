@@ -16,7 +16,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import Swal from 'sweetalert2';
+import Swal from '../../../nucleo/servicios/alerta-tema';
 import { ServicioUsuarios } from '../../../nucleo/servicios/servicio-usuarios';
 import { ServicioSedes } from '../../../nucleo/servicios/servicio-sedes';
 import { ServicioAreas } from '../../../nucleo/servicios/servicio-areas';
@@ -224,8 +224,6 @@ export class ModalUsuarioComponent implements OnInit, OnChanges {
       reverseButtons: true,
       allowOutsideClick: false,
       allowEscapeKey: true,
-      background: '#111',
-      color: '#f5f5f5',
     });
 
     if (!resultado.isConfirmed) {
@@ -274,8 +272,6 @@ export class ModalUsuarioComponent implements OnInit, OnChanges {
           timer: 1800,
           showConfirmButton: false,
           allowOutsideClick: false,
-          background: '#111',
-          color: '#f5f5f5',
         });
 
         // IMPORTANTE: emitir dentro de zone + refrescar
@@ -303,8 +299,6 @@ export class ModalUsuarioComponent implements OnInit, OnChanges {
             title: 'Documento duplicado',
             text: 'El número de documento ingresado ya está registrado.',
             allowOutsideClick: false,
-            background: '#111',
-            color: '#f5f5f5',
           });
           return;
         }
@@ -316,8 +310,6 @@ export class ModalUsuarioComponent implements OnInit, OnChanges {
             errorOriginal ||
             'Ocurrió un error al guardar el usuario. Intente nuevamente.',
           allowOutsideClick: false,
-          background: '#111',
-          color: '#f5f5f5',
         });
       },
     });

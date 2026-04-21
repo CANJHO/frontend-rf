@@ -1,83 +1,222 @@
 .reporte {
-  padding: 20px;
-  color: #f5f5f5;
+  padding: 1.5rem;
+  color: var(--text-primary);
   font-family: 'Segoe UI', sans-serif;
 }
 
-.titulo { margin: 0 0 0.5rem; }
+.titulo {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--text-primary);
+}
 
 .descripcion {
-  margin: 0 0 1rem;
-  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 1.2rem;
+  color: var(--text-secondary);
+  max-width: 980px;
+  line-height: 1.45;
 }
 
 .filtros {
-  border: 1px solid rgba(245, 193, 93, 0.25);
-  border-radius: 10px;
-  padding: 12px;
-  background: rgba(0,0,0,0.25);
-  max-width: 900px;
+  border: 1px solid var(--border-soft);
+  border-radius: 20px;
+  padding: 1rem 1rem 0.8rem;
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-md);
+  max-width: 960px;
 }
 
 .fila {
   display: flex;
-  gap: 14px;
-  align-items: center;
-  margin-bottom: 10px;
+  gap: 0.9rem;
+  align-items: flex-start;
+  margin-bottom: 0.9rem;
   flex-wrap: wrap;
+}
+
+.fila:first-child {
+  align-items: center;
+
+  label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.98rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  input[type='radio'] {
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
 }
 
 .campo {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0.42rem;
   min-width: 260px;
 
-  span { font-size: 12px; color: rgba(255,255,255,0.75); }
+  span {
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+    font-weight: 700;
+  }
 
-  input, select {
-    background: rgba(9, 9, 9, 0.995);
-    border: 1px solid rgba(255,255,255,0.18);
-    color: #fff;
-    border-radius: 8px;
-    padding: 8px 10px;
+  input,
+  select,
+  textarea {
+    background: var(--bg-input);
+    border: 1px solid var(--border-strong);
+    color: var(--text-primary);
+    border-radius: 12px;
+    padding: 0.72rem 0.9rem;
     outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+
+    &:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
   }
 }
 
+.campo-buscador {
+  position: relative;
+}
+
+.input-wrap {
+  position: relative;
+
+  input {
+    width: 100%;
+    padding-right: 2.4rem;
+  }
+}
+
+.clear {
+  position: absolute;
+  right: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.sugerencias {
+  margin-top: 0.35rem;
+  border: 1px solid var(--border-soft);
+  background: var(--bg-surface-raised);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.sugerencia {
+  width: 100%;
+  text-align: left;
+  padding: 0.72rem 0.85rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-soft);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: var(--bg-hover-soft);
+  }
+}
+
+.s1 {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.s2,
+.seleccion {
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+}
+
+.seleccion {
+  margin-top: 0.45rem;
+}
+
 .acciones {
-  margin-top: 14px;
+  margin-top: 1rem;
   display: flex;
-  gap: 10px;
+  gap: 0.85rem;
+  flex-wrap: wrap;
 }
 
 .btn {
-  background: #f5c15d;
-  color: #08090c;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: var(--accent-contrast);
   border: none;
-  padding: 9px 16px;
-  border-radius: 8px;
+  padding: 0.8rem 1.25rem;
+  border-radius: 14px;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  font-weight: 800;
+  box-shadow: var(--shadow-md);
 
-  &:hover { background: #d0a347; }
-  &:disabled { opacity: 0.6; cursor: not-allowed; }
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
 }
 
 .btn-sec {
-  background: rgba(245, 193, 93, 0.18);
-  color: #f5c15d;
-  border: 1px solid rgba(245, 193, 93, 0.35);
-
-  &:hover { background: rgba(245, 193, 93, 0.25); }
+  background: var(--bg-surface);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
 }
-/* ================================
-   INPUT TYPE DATE – ICONO CALENDARIO
-   ================================ */
-/* 🔧 Icono del calendario (input type="date") en blanco */
-input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
+
+input[type='date']::-webkit-calendar-picker-indicator {
   opacity: 1;
   cursor: pointer;
 }
 
+:host-context([data-theme='dark']) input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+:host-context([data-theme='light']) .titulo {
+  color: #0e0f0c;
+}
+
+:host-context([data-theme='light']) .descripcion {
+  color: #64748b;
+}
+
+:host-context([data-theme='light']) .filtros {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(246, 247, 249, 0.97));
+  border-color: rgba(14, 15, 12, 0.08);
+  box-shadow: 0 18px 38px rgba(17, 24, 39, 0.08);
+}
+
+:host-context([data-theme='light']) .campo span {
+  color: #64748b;
+}
+
+:host-context([data-theme='light']) .btn-sec {
+  background: #ffffff;
+  color: #0e0f0c;
+  border-color: rgba(14, 15, 12, 0.1);
+}

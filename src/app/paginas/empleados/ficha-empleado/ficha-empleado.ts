@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, firstValueFrom } from 'rxjs';
-import Swal from 'sweetalert2';
+import Swal from '../../../nucleo/servicios/alerta-tema';
 import jsPDF from 'jspdf';
 import { RouterModule } from '@angular/router';
 import { ServicioEmpleados } from '../../../nucleo/servicios/servicio-empleados';
@@ -148,8 +148,6 @@ export class FichaEmpleadoComponent implements OnInit {
             text: 'La foto del empleado se actualizó correctamente.',
             timer: 1800,
             showConfirmButton: false,
-            background: '#111',
-            color: '#f5f5f5',
           });
         },
         error: (err) => {
@@ -158,8 +156,6 @@ export class FichaEmpleadoComponent implements OnInit {
             icon: 'error',
             title: 'Error',
             text: 'No se pudo actualizar la foto. Intente nuevamente.',
-            background: '#111',
-            color: '#f5f5f5',
           });
         },
       });
@@ -445,8 +441,6 @@ export class FichaEmpleadoComponent implements OnInit {
         icon: 'error',
         title: 'Error',
         text: 'No se pudo generar el fotocheck. Intente nuevamente.',
-        background: '#111',
-        color: '#f5f5f5',
       });
     } finally {
       this.imprimiendoFotocheck = false;
@@ -767,8 +761,6 @@ export class FichaEmpleadoComponent implements OnInit {
         icon: 'error',
         title: 'Error',
         text: 'No se pudo generar la ficha PDF. Intente nuevamente.',
-        background: '#111',
-        color: '#f5f5f5',
       });
     } finally {
       this.imprimiendoFicha = false;
