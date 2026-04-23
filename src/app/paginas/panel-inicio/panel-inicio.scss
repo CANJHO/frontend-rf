@@ -602,7 +602,7 @@
 }
 
 .tardanza-item__nombre {
-  font-size: 0.82rem;
+  font-size: .82rem;
   font-weight: 800;
   color: var(--text-primary);
   white-space: nowrap;
@@ -832,8 +832,9 @@
   flex-shrink: 0;
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   color: var(--accent-contrast);
-  font-size: 0.86rem;
+  font-size: 0.82rem;
   font-weight: 900;
+  line-height: 1;
   box-shadow: var(--shadow-md);
 
   img {
