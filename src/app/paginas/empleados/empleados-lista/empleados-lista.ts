@@ -41,6 +41,16 @@ export class EmpleadosListaComponent implements OnInit {
     this.cargarEmpleados(1);
   }
 
+  claseTipoDocumento(tipo: unknown): string {
+    const normalizado = String(tipo || '').trim().toLowerCase();
+
+    if (normalizado === 'ce') return 'badge-tipo--ce';
+    if (normalizado === 'dni') return 'badge-tipo--dni';
+    if (normalizado === 'pasaporte') return 'badge-tipo--pasaporte';
+
+    return 'badge-tipo--default';
+  }
+
   get totalPaginas(): number {
     if (!this.totalRegistros || !this.tamanoPagina) {
       return 1;

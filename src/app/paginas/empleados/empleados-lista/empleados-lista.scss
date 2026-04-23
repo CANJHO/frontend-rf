@@ -269,6 +269,72 @@
   font-size: 0.8rem;
 }
 
+.rol-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.rol-cell__icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-surface-soft);
+  border: 1px solid var(--border-soft);
+  color: var(--text-secondary);
+  flex-shrink: 0;
+
+  svg {
+    width: 15px;
+    height: 15px;
+    fill: currentColor;
+  }
+}
+
+.badge-tipo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  padding: 0.42rem 0.72rem;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  box-shadow: 0 6px 16px rgba(17, 24, 39, 0.06);
+}
+
+.badge-tipo--dni {
+  color: #6d5bb3;
+  background: rgba(125, 94, 255, 0.1);
+  border-color: rgba(125, 94, 255, 0.14);
+}
+
+.badge-tipo--ce {
+  color: #2c8a9f;
+  background: rgba(69, 198, 214, 0.12);
+  border-color: rgba(69, 198, 214, 0.16);
+}
+
+.badge-tipo--pasaporte {
+  color: #9a5c14;
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.18);
+}
+
+.badge-tipo--default {
+  color: var(--text-secondary);
+  background: var(--bg-surface-soft);
+  border-color: var(--border-soft);
+}
+
 .badge-estado {
   display: inline-flex;
   align-items: center;

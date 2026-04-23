@@ -22,11 +22,12 @@ export class UsuariosListar implements OnInit {
 
   errorCarga = false;
   terminoBusqueda: string = '';
+  filtroEstado: 'todos' | 'activos' | 'inactivos' = 'todos';
+  filtroSede: string = 'todas';
 
   tamanoPagina = 20;
   opcionesTamanoPagina = [20, 50, 100];
   paginaActual = 1;
-  totalRegistros = 0;
 
   mostrandoModal = false;
   usuarioEditando: any | null = null;
@@ -38,10 +39,84 @@ export class UsuariosListar implements OnInit {
     this.cargarUsuarios();
   }
 
+  get sedesDisponibles(): string[] {
+    return [...new Set(this.usuarios.map((u) => String(u?.sede_nombre || '').trim()).filter(Boolean))]
+      .sort((a, b) => a.localeCompare(b));
+  }
+
+  get usuariosFiltrados(): any[] {
+    const termino = this.terminoBusqueda.trim().toLowerCase();
+
+    return this.usuarios.filter((u) => {
+      const coincideTexto =
+        !termino ||
+        [
+          u?.nombre,
+          u?.apellido_paterno,
+          u?.apellido_materno,
+          u?.numero_documento,
+          u?.email_personal,
+          u?.rol,
+          u?.sede_nombre,
+          u?.area_nombre,
+        ]
+          .filter(Boolean)
+          .some((valor) => String(valor).toLowerCase().includes(termino));
+
+      const coincideEstado =
+        this.filtroEstado === 'todos' ||
+        (this.filtroEstado === 'activos' && u?.activo === true) ||
+        (this.filtroEstado === 'inactivos' && u?.activo === false);
+
+      const coincideSede =
+        this.filtroSede === 'todas' ||
+        String(u?.sede_nombre || '').trim().toLowerCase() === this.filtroSede.toLowerCase();
+
+      return coincideTexto && coincideEstado && coincideSede;
+    });
+  }
+
+  get totalUsuarios(): number {
+    return this.usuariosFiltrados.length;
+  }
+
+  get usuariosActivos(): number {
+    return this.usuariosFiltrados.filter((u) => u?.activo === true).length;
+  }
+
+  get usuariosInactivos(): number {
+    return this.usuariosFiltrados.filter((u) => u?.activo === false).length;
+  }
+
+  get usuariosPracticantes(): number {
+    return this.usuariosFiltrados.filter(
+      (u) => String(u?.rol || '').trim().toLowerCase() === 'practicante',
+    ).length;
+  }
+
+  porcentajeResumen(valor: number): string {
+    if (!this.totalUsuarios) return '0% del total';
+    return `${((valor / this.totalUsuarios) * 100).toFixed(1)}% del total`;
+  }
+
+  claseTipoDocumento(tipo: unknown): string {
+    const normalizado = String(tipo || '').trim().toLowerCase();
+
+    if (normalizado === 'ce') return 'badge-tipo--ce';
+    if (normalizado === 'dni') return 'badge-tipo--dni';
+    if (normalizado === 'pasaporte') return 'badge-tipo--pasaporte';
+
+    return 'badge-tipo--default';
+  }
+
   get usuariosPaginados(): any[] {
     const inicio = (this.paginaActual - 1) * this.tamanoPagina;
     const fin = inicio + this.tamanoPagina;
-    return this.usuarios.slice(inicio, fin);
+    return this.usuariosFiltrados.slice(inicio, fin);
+  }
+
+  get totalRegistros(): number {
+    return this.usuariosFiltrados.length;
   }
 
   get totalPaginas(): number {
@@ -71,21 +146,110 @@ export class UsuariosListar implements OnInit {
       .subscribe({
         next: (resp) => {
           this.usuarios = resp || [];
-          this.totalRegistros = this.usuarios.length;
           this.paginaActual = 1;
         },
         error: () => {
           this.errorCarga = true;
           this.usuarios = [];
-          this.totalRegistros = 0;
           this.paginaActual = 1;
         },
       });
   }
 
   ejecutarBusqueda(): void {
-    const texto = this.terminoBusqueda.trim();
-    this.cargarUsuarios(texto || undefined);
+    this.paginaActual = 1;
+  }
+
+  aplicarFiltros(): void {
+    this.paginaActual = 1;
+  }
+
+  limpiarFiltros(): void {
+    this.filtroEstado = 'todos';
+    this.filtroSede = 'todas';
+    this.aplicarFiltros();
+  }
+
+  exportarUsuarios(): void {
+    const filas = this.usuariosFiltrados.map((u) => ({
+      nombre: [u?.nombre, u?.apellido_paterno, u?.apellido_materno].filter(Boolean).join(' ').trim(),
+      documento: u?.numero_documento || '',
+      tipo_documento: u?.tipo_documento || '',
+      correo_personal: u?.email_personal || '',
+      telefono: u?.telefono_celular || '',
+      rol: u?.rol || '',
+      sede: u?.sede_nombre || '',
+      area: u?.area_nombre || '',
+      estado: u?.activo ? 'Activo' : 'Inactivo',
+    }));
+
+    const encabezados = [
+      'Nombre completo',
+      'Documento',
+      'Tipo documento',
+      'Correo personal',
+      'Telefono',
+      'Rol',
+      'Sede',
+      'Area',
+      'Estado',
+    ];
+
+    const escaparHtml = (valor: unknown) =>
+      String(valor ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+
+    const filasHtml = filas
+      .map(
+        (fila) => `
+          <tr>
+            <td>${escaparHtml(fila.nombre)}</td>
+            <td>${escaparHtml(fila.documento)}</td>
+            <td>${escaparHtml(fila.tipo_documento)}</td>
+            <td>${escaparHtml(fila.correo_personal)}</td>
+            <td>${escaparHtml(fila.telefono)}</td>
+            <td>${escaparHtml(fila.rol)}</td>
+            <td>${escaparHtml(fila.sede)}</td>
+            <td>${escaparHtml(fila.area)}</td>
+            <td>${escaparHtml(fila.estado)}</td>
+          </tr>
+        `,
+      )
+      .join('');
+
+    const htmlExcel = `
+      <html xmlns:o="urn:schemas-microsoft-com:office:office"
+            xmlns:x="urn:schemas-microsoft-com:office:excel"
+            xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+          <meta charset="UTF-8" />
+          <style>
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #d7dce5; padding: 8px 10px; font-family: Arial, sans-serif; font-size: 12px; }
+            th { background: #ffd400; color: #111827; font-weight: 700; }
+          </style>
+        </head>
+        <body>
+          <table>
+            <thead>
+              <tr>${encabezados.map((col) => `<th>${escaparHtml(col)}</th>`).join('')}</tr>
+            </thead>
+            <tbody>${filasHtml}</tbody>
+          </table>
+        </body>
+      </html>
+    `;
+
+    const blob = new Blob(['\ufeff' + htmlExcel], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const enlace = document.createElement('a');
+    enlace.href = url;
+    enlace.download = 'usuarios_filtrados.xls';
+    enlace.click();
+    URL.revokeObjectURL(url);
   }
 
   cambiarTamanoPagina(nuevoTamano: number): void {
