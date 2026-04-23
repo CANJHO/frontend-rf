@@ -1,7 +1,7 @@
 .empleados {
   padding: 20px;
   color: var(--text-primary);
-  font-family: 'Segoe UI', sans-serif;
+  font-family: var(--font-body);
 }
 
 .empleados__hero {
@@ -182,7 +182,7 @@
   min-width: 1320px;
 
   th {
-    text-align: center;
+    text-align: left;
     padding: 15px 16px;
     font-size: 12px;
     font-weight: 800;
@@ -207,9 +207,22 @@
   }
 }
 
+.tabla-empleados th:nth-child(7),
+.tabla-empleados td:nth-child(7),
+.tabla-empleados th:nth-child(8),
+.tabla-empleados td:nth-child(8),
 .th-acciones,
 .td-acciones {
   text-align: center;
+}
+
+.tabla-empleados th:first-child {
+  text-align: center;
+}
+
+.th-acciones,
+.td-acciones {
+  width: 150px;
 }
 
 .empleado-link {
@@ -281,9 +294,11 @@
 }
 
 .acciones {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.55rem;
+  width: 100%;
 }
 
 .accion-btn {

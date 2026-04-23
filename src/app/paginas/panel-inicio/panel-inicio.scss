@@ -1,7 +1,7 @@
 .inicio {
   padding: 20px;
   color: var(--text-primary);
-  font-family: 'Segoe UI', sans-serif;
+  font-family: var(--font-body);
 }
 
 .cabecera {
@@ -871,6 +871,8 @@
   position: relative;
   font-weight: 700;
   color: var(--text-primary);
+  text-align: center;
+  white-space: nowrap;
 }
 
 .col-evento .punto {
@@ -998,6 +1000,16 @@
 }
 
 @media (max-width: 768px) {
+  .cabecera {
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .filtros {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
   .kpis {
     grid-template-columns: 1fr;
   }

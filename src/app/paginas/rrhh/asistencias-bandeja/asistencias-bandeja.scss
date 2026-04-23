@@ -1,7 +1,7 @@
 .asistencias {
   padding: 20px;
   color: var(--text-primary);
-  font-family: 'Segoe UI', sans-serif;
+  font-family: var(--font-body);
 }
 
 .asistencias__hero {
@@ -213,7 +213,7 @@
   min-width: 1120px;
 
   th {
-    text-align: center;
+    text-align: left;
     padding: 15px 16px;
     font-size: 12px;
     font-weight: 800;
@@ -238,10 +238,20 @@
   }
 }
 
+.tabla-asistencias th:nth-child(5),
 .th-acciones,
 .td-acciones,
 .td-pendiente {
   text-align: center;
+}
+
+.tabla-asistencias th:first-child {
+  text-align: center;
+}
+
+.th-acciones,
+.td-acciones {
+  width: 190px;
 }
 
 .empleado-cell {

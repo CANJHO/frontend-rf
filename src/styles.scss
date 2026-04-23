@@ -1,7 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@700;800&display=swap');
+
 /* Global theme tokens */
 :root,
 [data-theme='dark'] {
   color-scheme: dark;
+
+  --font-body: 'Inter', 'Segoe UI', sans-serif;
+  --font-display: 'Manrope', 'Inter', 'Segoe UI', sans-serif;
 
   --bg-app: #050505;
   --bg-shell: radial-gradient(circle at top, #111111 0, #050505 42%, #000000 100%);
@@ -97,11 +102,30 @@ body {
   min-height: 100%;
   background: var(--bg-app);
   color: var(--text-primary);
+  font-family: var(--font-body);
 }
 
 body {
   overflow-x: hidden;
   transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.app-swal-title {
+  font-family: var(--font-display);
+  letter-spacing: -0.03em;
 }
 
 app-root {

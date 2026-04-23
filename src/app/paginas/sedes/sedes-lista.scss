@@ -1,7 +1,7 @@
 .sedes {
   padding: 20px;
   color: var(--text-primary);
-  font-family: 'Segoe UI', sans-serif;
+  font-family: var(--font-body);
 }
 
 .sedes__hero {
@@ -140,7 +140,7 @@
   min-width: 540px;
 
   th {
-    text-align: center;
+    text-align: left;
     padding: 15px 16px;
     font-size: 12px;
     font-weight: 800;
@@ -165,9 +165,20 @@
   }
 }
 
+.tabla-sedes th:nth-child(2),
+.tabla-sedes td:nth-child(2),
 .th-acciones,
 .td-acciones {
   text-align: center;
+}
+
+.tabla-sedes th:first-child {
+  text-align: center;
+}
+
+.th-acciones,
+.td-acciones {
+  width: 150px;
 }
 
 .sede-cell {
@@ -218,9 +229,11 @@
 }
 
 .acciones {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.55rem;
+  width: 100%;
 }
 
 .accion-btn {
